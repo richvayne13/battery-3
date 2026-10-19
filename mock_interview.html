@@ -1,0 +1,2156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>🎙️ AI 랜덤 음성 모의면접 시뮬레이터 (전극 공정 & 경력 면접 마스터)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-body: #070b14;
+      --bg-card: #111827;
+      --bg-elevated: #1e293b;
+      --bg-glass: rgba(17, 24, 39, 0.88);
+      --border: #1f2937;
+      --border-highlight: #38bdf8;
+      --text-main: #f8fafc;
+      --text-sub: #cbd5e1;
+      --text-muted: #64748b;
+      --accent-blue: #38bdf8;
+      --accent-indigo: #6366f1;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-purple: #a855f7;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-lg: 0 16px 40px -8px rgba(0, 0, 0, 0.65);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      background-image: 
+        radial-gradient(at 15% 10%, rgba(56, 189, 248, 0.08) 0px, transparent 45%),
+        radial-gradient(at 85% 20%, rgba(99, 102, 241, 0.08) 0px, transparent 45%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+
+    /* Top Navigation Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7, 11, 20, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, #0284c7, #4f46e5);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border-radius: 8px;
+      letter-spacing: 0.04em;
+      box-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
+    }
+
+    .brand h1 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      background: var(--bg-elevated);
+      border: 1px solid #334155;
+      color: var(--text-sub);
+      text-decoration: none;
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--accent-blue);
+      color: #fff;
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    .nav-btn.primary {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      font-weight: 700;
+    }
+
+    /* Main Layout */
+    .layout-container {
+      max-width: 1280px;
+      margin: 24px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .layout-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left Column: Interview Stage */
+    .stage-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Filter & Settings Bar */
+    .top-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-bottom: 18px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cat-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .cat-pill {
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: var(--text-sub);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .cat-pill:hover {
+      border-color: var(--accent-blue);
+      color: #fff;
+    }
+
+    .cat-pill.active {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      font-weight: 700;
+    }
+
+    .progress-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 6px 12px;
+      border-radius: 8px;
+      color: var(--accent-emerald);
+      font-weight: 700;
+    }
+
+    /* Voice & Auto Options Bar */
+    .options-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid #1e293b;
+      padding: 10px 16px;
+      border-radius: 12px;
+      margin-bottom: 22px;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .option-item input[type="checkbox"] {
+      accent-color: var(--accent-blue);
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+
+    .speed-select {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #fff;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    /* Interviewer Question Box */
+    .interviewer-zone {
+      background: linear-gradient(145deg, #0f172a 0%, #162038 100%);
+      border: 1.5px solid #263859;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 22px;
+      position: relative;
+      transition: all 0.25s;
+    }
+
+    .interviewer-zone.speaking {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.2);
+    }
+
+    .interviewer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .interviewer-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0284c7, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      position: relative;
+    }
+
+    .speaking .avatar-circle::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-blue);
+      animation: pulseRing 1.2s infinite;
+    }
+
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); opacity: 1; }
+      100% { transform: scale(1.3); opacity: 0; }
+    }
+
+    .q-badge-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .q-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 0.82rem;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 3px 9px;
+      border-radius: 6px;
+    }
+
+    .q-category-tag {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .q-topic-raw {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .tts-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-icon {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: var(--text-main);
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn-icon:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    .btn-icon.star-active {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: var(--accent-amber);
+      color: var(--accent-amber);
+    }
+
+    .question-text {
+      font-size: 1.32rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.5;
+      word-break: keep-all;
+      padding: 8px 0;
+      transition: filter 0.25s;
+    }
+
+    .question-text.blind {
+      filter: blur(10px);
+      user-select: none;
+    }
+
+    .blind-hint {
+      display: none;
+      font-size: 0.82rem;
+      color: var(--accent-amber);
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    .question-text.blind + .blind-hint {
+      display: block;
+    }
+
+    /* Action Deck: Random Next / Prev / Repeat */
+    .main-action-bar {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .main-action-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+      .btn-random-next {
+        grid-column: span 2;
+        order: -1;
+      }
+    }
+
+    .btn-stage {
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-stage:hover {
+      background: #283548;
+      border-color: #475569;
+      transform: translateY(-1px);
+    }
+
+    .btn-random-next {
+      background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%);
+      border: 1px solid #38bdf8;
+      color: #ffffff;
+      font-size: 1.05rem;
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+    }
+
+    .btn-random-next:hover {
+      background: linear-gradient(135deg, #0369a1 0%, #4338ca 100%);
+      box-shadow: 0 8px 25px rgba(56, 189, 248, 0.55);
+    }
+
+    /* Recording & Playback Zone */
+    .recorder-zone {
+      background: #0b1120;
+      border: 1.5px solid #1e293b;
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 22px;
+      transition: all 0.25s;
+    }
+
+    .recorder-zone.recording {
+      border-color: var(--accent-rose);
+      background: rgba(244, 63, 94, 0.04);
+      box-shadow: 0 0 25px rgba(244, 63, 94, 0.15);
+    }
+
+    .recorder-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .rec-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .rec-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #64748b;
+    }
+
+    .recording .rec-dot {
+      background: var(--accent-rose);
+      box-shadow: 0 0 10px var(--accent-rose);
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.25; }
+    }
+
+    .rec-timer {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+      background: #111827;
+      border: 1px solid #334155;
+      padding: 4px 12px;
+      border-radius: 8px;
+    }
+
+    .recording .rec-timer {
+      color: var(--accent-rose);
+      border-color: rgba(244, 63, 94, 0.4);
+    }
+
+    .visualizer-wrap {
+      width: 100%;
+      height: 54px;
+      background: #070b14;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    canvas#audioCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .visualizer-placeholder {
+      position: absolute;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .rec-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-record {
+      flex: 1;
+      min-width: 180px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: 1.5px solid var(--accent-rose);
+      background: rgba(244, 63, 94, 0.15);
+      color: #fda4af;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-record:hover {
+      background: var(--accent-rose);
+      color: #fff;
+    }
+
+    .btn-record.is-recording {
+      background: var(--accent-rose);
+      color: #fff;
+      animation: pulseBtn 1.5s infinite;
+    }
+
+    @keyframes pulseBtn {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.5); }
+      50% { box-shadow: 0 0 0 10px rgba(244, 63, 94, 0); }
+    }
+
+    /* Recorded Audio Playback Box */
+    .playback-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 12px;
+      display: none;
+    }
+
+    .playback-box.ready {
+      display: block;
+    }
+
+    .playback-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .playback-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #34d399;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .playback-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    audio#recordedAudio {
+      width: 100%;
+      height: 42px;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    /* Live STT Transcript Box */
+    .stt-box {
+      margin-top: 14px;
+      background: #111827;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .stt-label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .stt-content {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+      min-height: 24px;
+      white-space: pre-wrap;
+    }
+
+    /* Answer Guide / User Script Zone */
+    .answer-zone {
+      background: #0f172a;
+      border: 1px solid #263859;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .answer-header {
+      padding: 16px 20px;
+      background: rgba(30, 41, 59, 0.7);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .answer-header:hover {
+      background: rgba(30, 41, 59, 1);
+    }
+
+    .answer-header-title {
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: var(--accent-amber);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .answer-body {
+      padding: 22px;
+      border-top: 1px solid #1e293b;
+      display: none;
+    }
+
+    .answer-zone.open .answer-body {
+      display: block;
+    }
+
+    .keywords-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .kw-badge {
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fcd34d;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .answer-script {
+      font-size: 0.98rem;
+      line-height: 1.78;
+      color: #f1f5f9;
+      white-space: pre-line;
+      word-break: keep-all;
+      background: #090d16;
+      border: 1px solid #1e293b;
+      border-left: 4px solid var(--accent-blue);
+      padding: 18px;
+      border-radius: 10px;
+    }
+
+    .answer-edit-area {
+      width: 100%;
+      min-height: 180px;
+      background: #090d16;
+      border: 1px solid var(--accent-blue);
+      color: #fff;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* Right Column: Question Bank & Deck Status */
+    .sidebar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 76px;
+      max-height: calc(100vh - 96px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .sidebar-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .search-box {
+      width: 100%;
+      background: #090d16;
+      border: 1px solid #334155;
+      color: #fff;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      margin-bottom: 12px;
+      outline: none;
+    }
+
+    .search-box:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .q-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-right: 4px;
+    }
+
+    .q-list::-webkit-scrollbar {
+      width: 5px;
+    }
+    .q-list::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+
+    .q-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #0b1120;
+      border: 1px solid #1e293b;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .q-item:hover {
+      border-color: #475569;
+      background: #151f32;
+    }
+
+    .q-item.current {
+      border-color: var(--accent-blue);
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    .q-item.done .q-item-num {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .q-item-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: #1e293b;
+      color: var(--text-sub);
+      border: 1px solid #334155;
+      margin-top: 1px;
+    }
+
+    .q-item-text {
+      flex: 1;
+      font-size: 0.83rem;
+      color: var(--text-sub);
+      line-height: 1.4;
+      word-break: keep-all;
+    }
+
+    .q-item.current .q-item-text {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .q-item-star {
+      font-size: 0.85rem;
+      color: var(--accent-amber);
+    }
+
+    /* Shortcut Guide Footer */
+    .shortcut-bar {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .kbd {
+      font-family: 'JetBrains Mono', monospace;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: var(--text-sub);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+    }
+
+    /* Add/Edit Question Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid #334155;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 640px;
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      background: #090d16;
+      border: 1px solid #334155;
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent-blue);
+    }
+
+    textarea.form-control {
+      min-height: 150px;
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-badge">VOICE INTERVIEW SIMULATOR</span>
+      <h1>🎙️ 실전 랜덤 음성 모의면접 시스템 (전극 공정 & 경력 면접)</h1>
+    </div>
+    <div class="header-links">
+      <button class="nav-btn primary" onclick="openAddModal()">➕ 새 질문 추가</button>
+      <button class="nav-btn" onclick="resetDeck()">🔄 출제 기록 초기화</button>
+      <a href="hyundai_followup.html" class="nav-btn">🎯 현대차 꼬리질문 14선</a>
+      <a href="index.html" class="nav-btn">📚 배터리 3 백과사전</a>
+    </div>
+  </div>
+</header>
+
+<div class="layout-container">
+  <!-- LEFT: MAIN INTERVIEW STAGE -->
+  <div class="stage-card">
+    <!-- Category Filter & Deck Progress -->
+    <div class="top-controls">
+      <div class="cat-pills">
+        <button class="cat-pill active" onclick="setCategory('all', this)">전체 (<span id="count-all">37</span>)</button>
+        <button class="cat-pill" onclick="setCategory('공정·운영·트러블슈팅', this)">공정·운영·트러블슈팅</button>
+        <button class="cat-pill" onclick="setCategory('핵심 프로젝트 (STAR-C)', this)">핵심 프로젝트 (STAR-C)</button>
+        <button class="cat-pill" onclick="setCategory('도메인·원리·물성', this)">도메인·원리·물성</button>
+        <button class="cat-pill" onclick="setCategory('직무·지원동기·협업', this)">직무·지원동기·협업</button>
+        <button class="cat-pill" onclick="setCategory('starred', this)">⭐ 중요 체크만</button>
+      </div>
+      <div class="progress-badge" id="deckProgress">진행: 1 / 37 (남은 랜덤: 36)</div>
+    </div>
+
+    <!-- Voice & Automation Options -->
+    <div class="options-bar">
+      <label class="option-item" title="새 문제가 나오면 면접관이 자동으로 질문을 읽어줍니다.">
+        <input type="checkbox" id="optAutoSpeak" checked>
+        <span>🔊 문제 출제 시 자동 음성 낭독</span>
+      </label>
+      <label class="option-item" title="면접관이 질문을 다 읽고 나면 자동으로 마이크 녹음을 시작합니다.">
+        <input type="checkbox" id="optAutoRecord">
+        <span>🎙️ 질문 낭독 직후 자동 녹음 시작</span>
+      </label>
+      <label class="option-item" title="녹음을 멈추면 내 답변 음성을 즉시 재생하고 모범답안을 펼칩니다.">
+        <input type="checkbox" id="optAutoPlayAnswer" checked>
+        <span>▶️ 녹음 종료 시 내 답변 자동 재생 & 답안 보기</span>
+      </label>
+      <label class="option-item" title="실제 면접처럼 질문 글자를 가리고 귀로만 듣습니다.">
+        <input type="checkbox" id="optBlindMode" onchange="toggleBlindMode()">
+        <span>🙈 질문 텍스트 블라인드 모드</span>
+      </label>
+      <div style="margin-left:auto; display:flex; align-items:center; gap:6px;">
+        <span>말하기 속도:</span>
+        <select id="ttsRate" class="speed-select">
+          <option value="0.9">0.9x (차분하게)</option>
+          <option value="1.0" selected>1.0x (기본)</option>
+          <option value="1.1">1.1x (실전 속도)</option>
+          <option value="1.2">1.2x (빠르게)</option>
+          <option value="1.35">1.35x (압박 면접)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Interviewer Question Zone -->
+    <div class="interviewer-zone" id="interviewerZone">
+      <div class="interviewer-header">
+        <div class="interviewer-profile">
+          <div class="avatar-circle">👔</div>
+          <div class="q-badge-group">
+            <span class="q-number" id="qNumberBadge">Q01</span>
+            <span class="q-category-tag" id="qCatBadge">공정·운영</span>
+            <span class="q-topic-raw" id="qRawTopic">원본 주제</span>
+          </div>
+        </div>
+        <div class="tts-controls">
+          <button class="btn-icon" id="btnStar" onclick="toggleStarCurrent()" title="중요 질문 별표">☆ 중요</button>
+          <button class="btn-icon" onclick="speakCurrentQuestion()" title="질문 음성 다시 듣기 (단축키 R)">🔊 질문 다시 읽기</button>
+          <button class="btn-icon" onclick="stopSpeaking()" title="음성 멈추기">🔇 멈춤</button>
+        </div>
+      </div>
+
+      <div class="question-text" id="questionText">
+        질문을 불러오는 중입니다...
+      </div>
+      <div class="blind-hint">🙈 블라인드 모드가 켜져 있습니다. 면접관의 음성에만 집중해 답변해 보세요! (클릭 시 일시 확인)</div>
+    </div>
+
+    <!-- Main Navigation / Random Pick Deck -->
+    <div class="main-action-bar">
+      <button class="btn-stage" onclick="prevHistoryQuestion()" title="이전에 풀었던 문제로 이동">
+        ⏮️ 이전 문제
+      </button>
+      <button class="btn-stage btn-random-next" onclick="pickRandomQuestion()" title="중복 없이 다음 랜덤 질문을 뽑고 음성으로 읽어줍니다 (단축키 N)">
+        🎲 다음 랜덤 문제 출제 & 음성 듣기
+      </button>
+      <button class="btn-stage" onclick="nextSequentialQuestion()" title="번호 순서대로 다음 문제 이동">
+        순차 다음 ⏭️
+      </button>
+    </div>
+
+    <!-- User Voice Answer Recording & Playback Zone -->
+    <div class="recorder-zone" id="recorderZone">
+      <div class="recorder-top">
+        <div class="rec-status">
+          <span class="rec-dot"></span>
+          <span id="recStatusText">대기 중 — 아래 '답변 녹음 시작' 버튼을 누르고 말씀하세요</span>
+        </div>
+        <div class="rec-timer" id="recTimer">00:00</div>
+      </div>
+
+      <div class="visualizer-wrap">
+        <canvas id="audioCanvas" width="700" height="54"></canvas>
+        <div class="visualizer-placeholder" id="visPlaceholder">🎙️ 마이크 파형 모니터 (녹음 시 활성화)</div>
+      </div>
+
+      <div class="rec-controls">
+        <button class="btn-record" id="btnRecordToggle" onclick="toggleRecording()">
+          🎙️ 내 답변 녹음 시작 (Space)
+        </button>
+        <button class="btn-icon" id="btnReplayMyVoice" onclick="playRecordedAudio()" style="display:none; padding:13px 16px;">
+          🎧 내 답변 다시 듣기 (P)
+        </button>
+      </div>
+
+      <!-- Recorded Audio Player -->
+      <div class="playback-box" id="playbackBox">
+        <div class="playback-header">
+          <div class="playback-title">
+            ✅ 녹음 완료! 내 답변을 들어보고 모범 답변과 비교해 보세요
+          </div>
+          <div class="playback-actions">
+            <span style="font-size:0.78rem; color:var(--text-sub);">재생 배속:</span>
+            <select class="speed-select" id="playbackSpeed" onchange="changePlaybackSpeed()">
+              <option value="1.0" selected>1.0x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+            </select>
+            <a id="downloadAudioLink" class="btn-icon" style="padding:4px 10px; font-size:0.76rem; text-decoration:none;" download="interview_answer.webm">💾 녹음 저장</a>
+          </div>
+        </div>
+        <audio id="recordedAudio" controls></audio>
+      </div>
+
+      <!-- Live Speech-to-Text Transcript -->
+      <div class="stt-box">
+        <div class="stt-label">
+          <span>📝 실시간 음성 인식 텍스트 변환 (Chrome/Edge 자동 받아쓰기)</span>
+          <span id="sttState">대기</span>
+        </div>
+        <div class="stt-content" id="sttTranscript">녹음을 시작하면 내가 말한 답변이 이곳에 텍스트로 기록됩니다.</div>
+      </div>
+    </div>
+
+    <!-- Model Answer & User Notes (Collapsible) -->
+    <div class="answer-zone" id="answerZone">
+      <div class="answer-header" onclick="toggleAnswerBox()">
+        <div class="answer-header-title">
+          <span>💡 내가 정리한 핵심 답변 노트 & 키워드 확인 (클릭하여 펼치기 / 접기)</span>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button class="btn-icon" onclick="event.stopPropagation(); speakAnswerScript();" style="padding:4px 10px; font-size:0.76rem;">🔊 모범답변 음성 듣기</button>
+          <button class="btn-icon" onclick="event.stopPropagation(); openEditCurrentModal();" style="padding:4px 10px; font-size:0.76rem;">✏️ 질문/답변 수정</button>
+          <span id="answerToggleArrow" style="color:var(--text-sub); font-weight:800;">▼ 펼치기</span>
+        </div>
+      </div>
+      <div class="answer-body">
+        <div class="keywords-row" id="answerKeywords"></div>
+        <div class="answer-script" id="answerScript"></div>
+      </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Footer -->
+    <div class="shortcut-bar">
+      <span>⚡ <strong>단축키 안내:</strong></span>
+      <span><kbd class="kbd">Space</kbd> 녹음 시작 / 정지</span>
+      <span><kbd class="kbd">N</kbd> 또는 <kbd class="kbd">→</kbd> 다음 랜덤 문제</span>
+      <span><kbd class="kbd">R</kbd> 질문 다시 읽기</span>
+      <span><kbd class="kbd">P</kbd> 내 녹음 다시 듣기</span>
+      <span><kbd class="kbd">A</kbd> 모범 답변 펼치기/접기</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: QUESTION BANK SIDEBAR -->
+  <aside class="sidebar-card">
+    <div class="sidebar-top">
+      <div class="sidebar-title">📋 전체 질문 리스트 (<span id="sidebarTotalCount">37</span>)</div>
+      <span style="font-size:0.76rem; color:var(--text-muted);">클릭 시 즉시 이동</span>
+    </div>
+    <input type="text" class="search-box" id="searchBox" placeholder="질문·키워드 검색 (예: 주름, LVDT, 바인더...)" oninput="renderQuestionList()">
+    <div class="q-list" id="questionListContainer"></div>
+  </aside>
+</div>
+
+<!-- Modal for Adding / Editing Question -->
+<div class="modal-backdrop" id="qaModal">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">➕ 면접 질문 추가 / 수정</div>
+    <input type="hidden" id="editQuestionId">
+    <div class="form-group">
+      <label>카테고리</label>
+      <select class="form-control" id="inputCategory">
+        <option value="공정·운영·트러블슈팅">공정·운영·트러블슈팅</option>
+        <option value="핵심 프로젝트 (STAR-C)">핵심 프로젝트 (STAR-C)</option>
+        <option value="도메인·원리·물성">도메인·원리·물성</option>
+        <option value="직무·지원동기·협업">직무·지원동기·협업</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>원본 짧은 제목 / 토픽</label>
+      <input type="text" class="form-control" id="inputTopic" placeholder="예: 전극 코팅 4대 불량 (로코주표)">
+    </div>
+    <div class="form-group">
+      <label>면접관 음성 질문 문장 (TTS가 읽어줄 문장)</label>
+      <input type="text" class="form-control" id="inputQuestion" placeholder="예: 전극 코팅 과정에서 발생하는 주요 불량의 원인과 개선 방안에 대해 말씀해 주세요.">
+    </div>
+    <div class="form-group">
+      <label>핵심 키워드 (쉼표로 구분)</label>
+      <input type="text" class="form-control" id="inputKeywords" placeholder="예: 자동보정, 슬러리 온도 테이블, 모따기·단차심, 코팅 중 얼라인">
+    </div>
+    <div class="form-group">
+      <label>나의 답변 대본 / 핵심 노트</label>
+      <textarea class="form-control" id="inputAnswer" placeholder="답변할 내용을 자유롭게 정리하세요..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-icon" onclick="closeModal()">취소</button>
+      <button class="nav-btn primary" onclick="saveQuestionModal()">저장하기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // =========================================================================
+  // 1. 초기 37개 면접 질문 & 사용자 맞춤형 답변 데이터베이스 (누락 없이 전수 수록)
+  // =========================================================================
+  const DEFAULT_QUESTIONS = [
+    {
+      id: 1,
+      cat: "공정·운영·트러블슈팅",
+      topic: "메뉴얼 뭐 제작해봤냐?",
+      question: "그동안 현장에서 어떤 매뉴얼이나 SOP를 직접 제작해 보셨나요?",
+      keywords: ["자주검사 SOP", "조건조정 SOP", "심(Shim) 조립 SOP"],
+      answer: `• 자주검사 SOP\n• 조건조정 SOP\n• 심(Shim) 조립 SOP`
+    },
+    {
+      id: 2,
+      cat: "공정·운영·트러블슈팅",
+      topic: "운영적인 팁이 있다면?",
+      question: "생산 및 공정 운영에 있어서 본인만의 운영적인 팁이나 현장 설득 노하우가 있다면 말씀해 주세요.",
+      keywords: ["수치화 및 그래프", "현장 밀착 직접 수행", "Why(당위성) 설득"],
+      answer: `• 핵심 팁: 수치화 및 그래프 활용, 그리고 현장에 밀착해 직접 해보는 것입니다.\n• 수치화 및 그래프를 활용해서 현장을 설득합니다.\n• '왜 해야만 하는지'를 데이터와 그래프로 명확히 설명하면 현장 작업자분들도 공감하고 같이 움직이는 것을 많이 확인했습니다.`
+    },
+    {
+      id: 3,
+      cat: "공정·운영·트러블슈팅",
+      topic: "전극 코팅 불량 원인, 개선 방안 : 로코주표",
+      question: "전극 코팅 과정에서 발생하는 주요 불량의 원인과 개선 방안에 대해 말씀해 주세요.",
+      keywords: ["손맛 최소화 (자동보정 필수)", "로딩불량(온도 테이블/매니폴드)", "코팅폭불량(심 치수/모따기/단차심)", "주름불량(코팅 중 브라켓 얼라인)", "표면불량(필터 2단/에어커튼)"],
+      answer: `[전제] 작업자 '손맛'을 최소화한다는 점에서 자동보정 적용이 전부 필요하다는 점을 먼저 말씀드립니다.\n\n1. 로딩 불량\n• 슬러리 온도 제어 로직 TABLE을 재구성하거나, 매니폴드와 밸브를 여러 개로 구성하여 개선합니다.\n\n2. 코팅폭 불량\n• 심(Shim) 치수를 변경하거나 모따기(Chamfer)나 단차심을 반영하고, 누적폭과 공정능력(Cpk)을 집중 관리합니다.\n\n3. 주름 불량 (일자주름 / 사선주름)\n• 일자주름과 사선주름은 롤 얼라인을 봐야 하는데, 이번에 새로운 호기에서 생산운영을 해보니 '코팅을 실제로 하면서 얼라인을 해야 한다'는 중요한 점을 알게 됐습니다.\n• 아무리 무지부 상태에서 롤 간 거리와 수평도를 맞춰도, 실제 코팅 시 브라켓과 볼트의 미세한 풀림이 누적으로 장력 불균형을 유발하기 때문에 짧게짧게 코팅을 진행하면서 얼라인을 봐야 합니다.\n\n4. 표면 불량\n• 필터를 2개(2단)로 쓰거나 필터 입자 사이즈(Mesh/Pore size)를 변경하고, 코터 헤드부에 에어커튼을 설치해 외부 이물 유입을 차단합니다.`
+    },
+    {
+      id: 4,
+      cat: "공정·운영·트러블슈팅",
+      topic: "배터리 제조 공정 자동화로 생산성 향상 전략",
+      question: "배터리 제조 공정 자동화를 통해 생산성을 향상시키는 전략에 대해 말씀해 주세요.",
+      keywords: ["저속 조건조정 후 증속", "절연폭·로딩·코팅폭 자동보정", "초기조건조정 & 재조건조정 Loss 저감"],
+      answer: `• 속도를 낮춰 조건조정을 빠르게 완료한 뒤 본 속도로 올리는 전략\n• 절연폭, 로딩, 코팅폭 자동보정 시스템을 구축해서 조건조정 LOSS를 줄이기 (조건조정은 크게 '초기 조건조정'과 '재조건조정'으로 나뉨)`
+    },
+    {
+      id: 5,
+      cat: "공정·운영·트러블슈팅",
+      topic: "공정 데이터 기반 품질 개선 전략",
+      question: "공정 데이터를 기반으로 전극 품질을 개선하는 전략은 무엇이라고 생각하시나요?",
+      keywords: ["공정능력(Cpk) 개선", "데이터 기반 자동보정 구축", "산포 저감 Action"],
+      answer: `• 보통 전극 품질은 공정능력(Cpk)을 개선하면 자연스럽게 함께 개선됩니다.\n• 따라서 공정 데이터를 기반으로 자동보정 시스템을 구축하거나, 공정능력을 개선하기 위한 구체적인 Action들을 도출해 수행하면 됩니다.`
+    },
+    {
+      id: 6,
+      cat: "공정·운영·트러블슈팅",
+      topic: "LOSS 줄이는 방식",
+      question: "공정에서 양산 LOSS를 줄이는 본인만의 방식이나 성과 경험이 있다면 말씀해 주세요.",
+      keywords: ["파레토 차트 TOP 3 개선", "초기/재조건조정 타겟팅", "저속 코팅폭 셋업 후 증속", "웹게이지 레시피 & 슬러리 온도 관리"],
+      answer: `• 파레토 차트(Pareto Chart)로 Loss 항목을 나열해서 TOP 3를 집중 개선합니다 (보통 초기 조건조정과 재조건조정 Loss가 가장 큼).\n• 저는 속도가 빠른 고속 모델에서 초기 속도를 낮춰서 코팅폭을 먼저 빠르게 맞춘 다음, 정속으로 올려서 양품을 생산하는 방식으로 조건조정 LOSS를 크게 줄인 적이 있습니다.\n• 아울러 웹게이지 레시피 최적화와 슬러리 온도 관리를 병행합니다.`
+    },
+    {
+      id: 7,
+      cat: "공정·운영·트러블슈팅",
+      topic: "어려운 거 뭐 있었냐",
+      question: "업무를 수행하면서 가장 어려웠던 기술적 난제는 무엇이었고, 어떻게 해결하셨나요?",
+      keywords: ["슬러리 온도 제어 (부스 내 경향성 테스트)", "절연 액맺힘 (밸브 이원화 & 개폐 타이밍)", "사선주름 (브라켓 앞뒤 미세 조정)"],
+      answer: `1. 슬러리 온도 제어\n• 손맛이 많이 타는 영역인데, 제어 테이블을 아무리 잘 구성해도 가동 시마다 온도 트렌드가 달라서 정량화하기 어려웠습니다. 슬러리 온도가 룸(Room) 온도를 따라가길래 최근 부스 내에 설치해서 온도 경향성을 테스트해보고 있습니다.\n\n2. 절연 셋업 후 액 맺힘(한 방울씩 떨어짐)\n• 절연 셋업 후 절연액이 한 방울씩 떨어지는 이슈가 있었는데, 밸브를 이원화하고 열고 닫는 개폐 타이밍을 정밀 조절해서 잔압 없이 꽉 막을 수 있도록 해결했습니다.\n\n3. 사선주름 트러블\n• 최근 주름이 말썽을 피웠는데, 현장에 직접 들어가 기재가 사선으로 주름지는 부분의 롤 브라켓 앞뒤를 미세하게 조정하여 장력 밸런스를 맞춰 주름을 잡았습니다.`
+    },
+    {
+      id: 8,
+      cat: "공정·운영·트러블슈팅",
+      topic: "실패한 거 / 아쉬웠던 경험",
+      question: "그동안 시도했던 과제나 테스트 중에서 실패했거나 아쉬움이 남았던 경험이 있다면 무엇인가요?",
+      keywords: ["코팅 Gap 완전 자동보정 (단선 Risk)", "절연 기구부 공압 적용 (모터 미적용 아쉬움)", "무중단 코팅 (단선 발생 테스트 중)"],
+      answer: `1. 코팅 Gap 완전 자동보정\n• Gap을 많이 붙이면 단선(터질) Risk가 있어 아직 완전 자동화를 못 했는데, 될지 안 될지 모르겠지만 꼭 구현해보고 싶은 과제입니다.\n\n2. 절연 셋업 기구부 상하 조작 방식\n• 절연 셋업할 때 기계부 위아래 조작하는 것을 모터 구동이 아닌 공압으로 구성한 점입니다. 그로 인해 기구부를 내려놓고 써야 해서 작업 편의성이 조금 떨어지는 아쉬움이 있습니다.\n\n3. 무중단 코팅 테스트\n• 현재 테스트해보고 있는데 속도·조건 전환 시 단선이 많이 발생해서 아직 극복 중인 실패 사례 중 하나입니다.`
+    },
+    {
+      id: 9,
+      cat: "직무·지원동기·협업",
+      topic: "특별히 자신 있는 거 있냐",
+      question: "본인이 엔지니어로서 특별히 자신 있는 분야나 강점이 있다면 말씀해 주세요.",
+      keywords: ["전부 자신 있음", "렌치 기구 조작부터 조건조정까지 현장 밀착", "미숙련 작업자 셋업 교육", "고난도 모델 코팅폭 조건조정", "데이터 장표 작성 & AI 활용"],
+      answer: `• 솔직히 말씀드리면 전부 자신 있습니다!\n• 제가 직접 현장에 밀착해서 렌치 쪼으는 기구 조작부터 조건조정까지 다 직접 해봤기 때문에 현장 대응은 누구보다 자신 있습니다.\n• 특히 신규 라인을 셋업하면서 미숙련된 작업자들을 교육시켜야 할 텐데, 제가 직접 몸으로 해봤기 때문에 가장 잘 가르치고 셋업할 수 있을 것 같습니다.\n• 또한 까다롭고 어려운 모델을 경험해봐서 '코팅폭 조건조정'에 특히나 자신 있으며, 사무실에서 데이터 만져서 보고 장표 만드는 것과 AI를 실무에 다루는 것도 자신 있습니다.`
+    },
+    {
+      id: 10,
+      cat: "도메인·원리·물성",
+      topic: "세이프티 이슈 리스크 항목 머 개선해야 되냐",
+      question: "전극 공정에서 배터리 세이프티 이슈와 직결되는 리스크 항목은 무엇이고, 각각 어떻게 개선해야 하나요?",
+      keywords: ["로딩·코팅폭·펫엣지·슬라이딩", "로딩: 슬러리 온도 테이블", "펫엣지(Fat Edge): 심 끝단 모따기 압력 분산", "슬라이딩: 음극 N/P Ratio 역전 → 단차심 & 심 설계 변경"],
+      answer: `• 세이프티 이슈 리스크 항목에는 크게 [로딩, 코팅폭, 펫엣지(Fat Edge), 슬라이딩(Sliding)]이 있습니다.\n\n1. 로딩(Loading)\n• 균일하게 도포할 수 있도록 슬러리 온도를 잘 컨트롤하기 위해 온도에 따른 제어 테이블을 구성합니다.\n\n2. 펫엣지(Fat Edge)\n• 코팅 양 끝단이 볼록하게 올라오는 현상으로 단선과 캠버(Camber)를 유발합니다.\n• 원인: 코팅 비드 양 끝단으로 슬러리 유량이 뭉침 ➔ 해결: 심(Shim) 끝단을 모따기(Chamfer)하여 토출 압력을 분산시킵니다.\n\n3. 슬라이딩(Sliding)\n• 특히 음극에서 슬라이딩 발생 시 국부적 N/P Ratio 역전이 발생해 리튬 덴드라이트 석출 및 발화 위험이 커집니다.\n• 해결: 단차심(Step Shim) 사용 및 심 설계 변경으로 해결합니다.`
+    },
+    {
+      id: 11,
+      cat: "도메인·원리·물성",
+      topic: "전극 공정에서 핵심 품질 요소가 무엇인가요?",
+      question: "전극 공정에서 관리해야 하는 핵심 품질 요소인 CTQ와 CTP는 무엇인가요?",
+      keywords: ["CTQ: 로딩, 코팅폭, 슬라이딩", "CTP: CP 문서 관리 인자 (오븐 팬, 댐퍼 개도율, 공정능력 시그마 등)"],
+      answer: `• CTQ (Critical to Quality, 핵심 품질 특성): 로딩(Loading), 코팅폭(Width), 슬라이딩(Sliding)\n• CTP (Critical to Process, 핵심 공정 파라미터): Control Plan(CP) 문서에 나오는 공정 제어 인자들 (오븐 팬 풍속, 댐퍼 개도율, 슬러리 온도/점도, 주속비, 공정능력 시그마 등)`
+    },
+    {
+      id: 12,
+      cat: "공정·운영·트러블슈팅",
+      topic: "공정 불량이 증가할 때 대응 방안",
+      question: "양산 중 원인을 바로 알기 어려운 공정 불량이 갑자기 증가할 때 어떻게 대응하시나요?",
+      keywords: ["우선순위 기반 인자 검증", "소거법 활용", "작은 인자 ➔ 큰 인자 순서 (다이 내부 ➔ 배관 ➔ 필터 ➔ 공급탱크 ➔ 이송탱크)"],
+      answer: `• 원인을 모르는 인자일 때에는 우선순위를 두고 인자를 하나씩 검증해보는 방향으로 테스트를 진행합니다.\n• 예를 들어 코팅 표면에 '분화구' 불량이 쏟아진다고 하면, 소거법을 활용하여:\n  [다이 내부 적체된 슬러리 ➔ 공급 배관 ➔ 필터 ➔ 공급 탱크 ➔ 이송 탱크]\n  순서로 점점 작은(말단) 인자에서 큰(상류) 인자로 범위를 좁혀가며 원인을 찾아냅니다.`
+    },
+    {
+      id: 13,
+      cat: "공정·운영·트러블슈팅",
+      topic: "공정 데이터를 활용해서 개선해본 경험",
+      question: "공정 데이터를 분석하고 활용해서 실제로 공정을 개선해 본 경험들을 말씀해 주세요.",
+      keywords: ["WET vs DRY 절연폭 비교 ➔ WET 기반 자동보정", "미니다이 Gap 이동거리별 절연폭 변화 정량화", "심 오프셋 1㎛당 코팅폭 변화량 확인", "슬러리 온도 & 펌프 RPM별 로딩 변화량 분석"],
+      answer: `1. WET 절연폭과 DRY 절연폭 수치를 비교 분석하여 WET DATA 기반의 실시간 자동보정을 진행 중이며, 이를 통해 조건조정 LOSS를 크게 줄였습니다.\n2. 미니다이 GAP 이동 거리에 따른 절연폭 변화량이 얼마인지 정량화하여 모델별 레시피로 관리했습니다.\n3. 미세조절장치 프로젝트를 진행하면서 심(Shim) 오프셋 조정 1마이크로미터(1㎛)당 실제 코팅폭 변화량을 실험적으로 정량화했습니다.\n4. 슬러리 온도와 펌프 RPM에 따른 로딩 변화량 상관관계를 분석해 제어 테이블에 반영했습니다.`
+    },
+    {
+      id: 14,
+      cat: "도메인·원리·물성",
+      topic: "코팅의 두께를 균일하게 유지하는 방법",
+      question: "코터에서 코팅의 두께를 균일하게 유지하는 방법은 무엇인가요?",
+      keywords: ["C롤(코팅롤) 주속비 조절", "헤드부 텐션 정밀 제어"],
+      answer: `• C롤(Coating Roll)의 주속비를 정밀하게 조절하거나, 코팅 헤드부 텐션(Tension)을 흔들림 없이 정확히 맞춥니다.`
+    },
+    {
+      id: 15,
+      cat: "직무·지원동기·협업",
+      topic: "공정 협업에서 갈등 경험과 해결 방법",
+      question: "현장이나 팀원, 또는 유관부서와 협업하는 과정에서 갈등이 생겼을 때 어떻게 해결하시나요?",
+      keywords: ["현장 갈등: 감정 배제 & 수치·자료화 설득", "팀원 갈등: 조직에 더 득이 되는 우선순위 결정", "유관부서 갈등: R&R 준수 및 필요시 팀장님 보고"],
+      answer: `1. 현장과의 갈등\n• 현장은 보통 엔지니어가 설득해서 이끌어나가야 하는 상황이 많은데, 그럴 때마다 감정적으로 부딪치지 않고 철저히 '수치와 자료화(그래프)'하여 당위성을 설득하는 방식을 사용합니다.\n\n2. 팀원과의 갈등\n• 팀원과는 주로 어떤 업무의 우선순위를 높게 진행할지 같이 고민하게 되는데, 개인의 편리가 아니라 '조직 전체에 더 득이 되는 결정'을 최우선 순위로 가져가며 조율합니다.\n\n3. 유관부서와의 갈등\n• 명확한 R&R(역할과 책임) 기준대로 진행하되, 실무선에서 풀리지 않는 병목 이슈는 지체 없이 팀장님께 보고드려 해결합니다.`
+    },
+    {
+      id: 16,
+      cat: "도메인·원리·물성",
+      topic: "##코팅공정 설명",
+      question: "담당하셨던 전극 코팅 공정이 어떤 원리로 이루어지는지 설명해 주세요.",
+      keywords: ["Al Foil 주행 중 상·하면 개별 개소 코팅", "SUS 다이 바디 사이 쇠창살 형태의 심(Shim)", "심 사이 유로로 액체 슬러리 토출 도포"],
+      answer: `• Al Foil(집전체)이 롤투롤로 주행하면서 윗면(A면)과 아랫면(B면)이 각각 다른 개소에서 코팅되는 공정입니다.\n• 스테인리스(SUS)로 된 다이 바디(Die Body) 사이에 쇠창살처럼 홈이 난 심(Shim)이 끼워져 있고, 그 사이 공간(유로)으로 액체 상태인 슬러리가 토출되어 Foil 위에 균일하게 코팅되는 방식입니다.`
+    },
+    {
+      id: 17,
+      cat: "도메인·원리·물성",
+      topic: "##배터리공정 설명",
+      question: "이차전지 배터리 제조 공정 전체 흐름인 전극, 조립, 활성화 공정에 대해 설명해 주세요.",
+      keywords: ["1. 전극 공정 (믹싱➔코팅➔롤프레싱➔슬리팅)", "2. 조립 공정 (스태킹/와인딩➔탭용접➔주액➔밀봉)", "3. 활성화 공정 (포메이션➔에이징➔SEI 피막 형성)"],
+      answer: `• 첫째, [전극 공정]은 활물질, 도전재, 바인더를 섞는 믹싱(Mixing)을 시작으로, Foil에 균일하게 도포하는 코팅(Coating), 에너지 밀도를 극대화하는 압연(Roll Pressing), 설계 폭에 맞게 자르는 슬리팅(Slitting)을 거쳐 양극과 음극 판을 만듭니다. 배터리의 용량과 기본 품질을 결정짓는 가장 핵심적인 단계입니다.\n\n• 둘째, [조립 공정]은 완성된 전극을 분리막과 함께 쌓거나(Stacking) 말아서(Winding) 젤리롤 형태를 만들고, 캔이나 파우치 케이스에 넣은 뒤 탭 용접하고 전해액 주액 후 밀봉하여 셀을 완성합니다.\n\n• 마지막 [활성화 공정]은 완성된 셀에 첫 충방전을 가하는 포메이션(Formation)과 에이징(Aging)을 통해 음극 표면에 안정적인 SEI(Solid Electrolyte Interphase) 피막을 형성함으로써 화학적으로 활성화시키는 단계입니다.`
+    },
+    {
+      id: 18,
+      cat: "도메인·원리·물성",
+      topic: "##배터리 동작 원리 (약 1분 스피치)",
+      question: "리튬이온 배터리의 충·방전 동작 원리에 대해 1분 스피치 형태로 설명해 주세요.",
+      keywords: ["리튬 이온(Li+)과 전자의 산화환원 반응", "충전: 양극➔음극 이동 (위치에너지 축적)", "방전: 음극➔양극 이동 (전기에너지 발생)", "분리막 단락 방지 & 전해액(유기화합물 절연체) 전자 통과 불가"],
+      answer: `"리튬이온 배터리의 핵심 원리는 양음극, 전해액, 분리막에서 발생하는 리튬 이온(Li+)과 전자의 산화환원 반응입니다.\n\n먼저 충전(Charging) 시에는 리튬 이온이 양극에서 음극으로 이동하며, 전자는 외부 도선을 따라 음극으로 이동해 위치 에너지를 축적합니다.\n\n방전(Discharging) 시에는 음극의 리튬 이온이 양극으로 이동하고, 전자는 외부 도선을 타고 양극으로 흐르며 전기에너지를 발생시킵니다.\n\n즉, 분리막을 통해 양음극의 직접 접촉으로 인한 단락(Short)을 방지하면서, 리튬 이온은 전해액 내부로, 전자는 외부 도선으로 이동시키는 연속적인 과정이 배터리 동작의 본질입니다."\n\n[보충 포인트] 전해액은 자유전자가 없는 유기화합물이라 전자에 대해서는 절연체와 같아 전자는 분리막과 전해액을 통과하지 못하고 외부 도선으로만 이동합니다.`
+    },
+    {
+      id: 19,
+      cat: "도메인·원리·물성",
+      topic: "##바인더 마이그레이션 & 건조 제어",
+      question: "건조 공정에서 발생하는 바인더 마이그레이션 현상의 5단계 발생 원리와 해결 방안에 대해 설명해 주세요.",
+      keywords: ["1. 초기 균일 슬러리", "2. 표면 용매 증발", "3. 모세관 대류(Capillary Force)", "4. 바인더 동반 상승", "5. 편석 고착(접착력 저하·크랙)", "대책: 항률구간 온도 낮춰 완속건조 / 고형분 상향"],
+      answer: `1. 초기 슬러리 상태: 알루미늄이나 구리 Foil 위에 도포된 젖은(Wet) 슬러리 내부에는 활물질, 도전재, 바인더(양극 PVDF, 음극 SBR/CMC 등), 용매(NMP 또는 물)가 균일하게 섞여 있습니다.\n2. 건조 시작 및 용매 증발: 건조 오븐에서 열풍(Convection)이나 복사열을 가하면, 전극의 최외곽 표면에서부터 용매가 증발하기 시작합니다.\n3. 모세관 압력에 의한 대류(Convective Flux): 표면의 용매가 날아가면 빈 공간을 채우기 위해 전극 내부와 하부(Foil 쪽)에 있던 액체 용매가 모세관 현상(Capillary Force)에 의해 표면 쪽으로 강하게 빨려 올라옵니다.\n4. 바인더의 동반 상승 및 편중: 이때 용매에 용해되어 있거나 미세 입자로 분산되어 있던 바인더 고분자가 용매의 흐름에 휩쓸려 전극 상부 표면으로 함께 이동합니다.\n5. 편석(Segregation) 고착: 고형분이 굳어지는 임계점(Consolidation Point)에 도달하면, 바인더가 표면 쪽에는 빽빽하게 뭉치고 정작 집전체(Foil)와 맞닿는 하부에는 바인더가 텅 비어버리는 농도 불균형이 발생합니다. 이로 인해 접착력이 낮아지거나(박리), 바인더가 과도하게 밀집된 표면층이 급격히 건조 수축해 미세 크랙을 유발합니다.\n\n[해결 대책]\n• 오븐 건조속도 제어: 항률 건조 구간에서는 온도를 낮춰 표면 증발 속도를 늦춤으로써 완속 건조를 유도합니다.\n• 고형분 상향: 고형분이 높으면 날려야 할 용매 양이 적어져 바인더 마이그레이션 위험이 줄어듭니다.`
+    },
+    {
+      id: 20,
+      cat: "도메인·원리·물성",
+      topic: "슬러리 물성 정의 (고형분, 점도, 분산, 그라인드게이지, 입도)",
+      question: "슬러리 핵심 물성 지표인 고형분, 점도, 분산, 그라인드 게이지, 그리고 입도 D50과 Dmax의 의미를 각각 설명해 주세요.",
+      keywords: ["고형분(순수 고체 무게비율)", "점도(내부 마찰저항)", "분산(낱개로 퍼진 상태)", "그라인드 게이지(몇 ㎛에서 입자 스크래치 발생하는지)", "입도 D50(중간 평균입자) / Dmax(최대 덩어리)"],
+      answer: `• 고형분: 용매를 제외한 고체의 순수 무게 비율입니다. 고형분이 높으면 건조 시 날려야 할 용매 양이 적어져 바인더 마이그레이션 위험이 줄어듭니다.\n• 점도: 유체 흐름에 대한 내부 마찰 저항입니다.\n• 분산: 도전재나 활물질 입자가 응집되지 않고 용매 속에 낱개로 고르게 퍼져 있는 상태입니다.\n• 그라인드 게이지(Grind Gauge): 분산도 측정기로서, 몇 마이크로미터(㎛) 깊이에서 입자가 긁히거나 돌출되어 스크래치 라인이 발생하는지 측정하는 도구입니다.\n• 입도(Particle Size Distribution): 입자의 크기 누적 분포입니다. (D50은 크기순 중간에 있는 평균 입자 크기, Dmax는 가장 큰 덩어리 입자 크기)`
+    },
+    {
+      id: 21,
+      cat: "공정·운영·트러블슈팅",
+      topic: "개발단계에서 문제?",
+      question: "신규 모델 개발 단계에서 어떤 문제들이 있었고 어떻게 대응하셨나요?",
+      keywords: ["레이저 노칭 (절연액 노칭 불량 ➔ 규격 DOE)", "원료 레시피 (전극 저항 과다 ➔ DOE 진행)", "절연 시인성 (비전 A/B면 오인식 ➔ 2차 미분 해결)"],
+      answer: `생산에서 대응할 메인 이슈는 없었으나 개발 단계에서 아래 3가지 이슈에 대응했습니다.\n\n1. 레이저 노칭 이슈: 원재료(절연액)가 고객사 공정에서 레이저 노칭이 잘 안 되어 규격 DOE를 여러 번 진행해 최적 조건을 찾았습니다.\n2. 원료 레시피 이슈: 전극 저항이 높게 나와 이를 낮추기 위한 여러 가지 DOE를 진행했습니다.\n3. 절연 시인성 이슈: 비전 카메라에서 A면과 B면을 구분해서 측정해야 하는데 경계를 잘못 잡는 이슈가 있었고, 이미지 신호에 '2차 미분' 알고리즘을 적용하여 해결했습니다.`
+    },
+    {
+      id: 22,
+      cat: "공정·운영·트러블슈팅",
+      topic: "셋업단계에서 문제? / 설비 검사기셋업?",
+      question: "설비 및 검사기 셋업 단계에서 겪었던 문제와 해결 방법을 말씀해 주세요.",
+      keywords: ["절연액 맺힘: 3way 밸브 ➔ 2way 밸브 2개 변경 & 타이밍 조절", "코팅 정지 후 누액: 밸브 타이밍 딜레이 설정"],
+      answer: `• 셋업 단계 절연액 맺힘 이슈: 기존 3-way 밸브 구조에서 2-way 밸브 2개로 하드웨어를 변경하고, 밸브 개폐 타이밍을 변경하여 해결했습니다.\n• 설비/검사기 셋업 이슈: 코팅을 끊었는데도 슬러리/절연액이 질질 새는 경우, 밸브 타이밍에 딜레이(Delay)를 정밀하게 주어서 딱 끊기도록 맞췄습니다.`
+    },
+    {
+      id: 23,
+      cat: "직무·지원동기·협업",
+      topic: "고객대응은 뭐한거에요?",
+      question: "경력 사항 중 고객 대응 업무는 구체적으로 어떤 일을 하신 건가요?",
+      keywords: ["Lot별 인라인 데이터 & QA 결과 기반 출하승인 대응", "특이점 발생 시 기술적 메커니즘 설명", "문제 발생 시 원인분석~개선방안 기술자료 작성 및 설득"],
+      answer: `• 고객사가 인라인(In-line) 검사 데이터와 QA 측정 결과를 보고 매 Lot마다 출하 승인을 하는데요,\n• 제품 데이터에 특이점이 있을 경우 그 물리적·기술적인 메커니즘을 설명하거나, 실제 품질 문제가 있을 경우 원인 분석부터 개선 방안까지 기술적인 보고 자료를 만들어 고객사에 논리적으로 설명하고 출하를 이끌어내는 업무입니다.`
+    },
+    {
+      id: 24,
+      cat: "공정·운영·트러블슈팅",
+      topic: "고객대응 : 검사기 자가검진 이슈",
+      question: "고객 대응을 하면서 실제로 해결했던 품질이나 검사기 이슈 사례가 있다면 구체적으로 말씀해 주세요.",
+      keywords: ["웹게이지 주기적 자가보정(Standardization) 직후 로딩값 튐 현상", "Dirt Curve(이물 보정 곡선) 미세 이물 & 모수 부족으로 DFrac 왜곡", "클리닝 의무화 + 샘플 모수·측정횟수 확대", "DFrac 0 수렴 & 2RMS 오차율 저감 클로징"],
+      answer: `• 전극 코터 웹게이지(Web Gauge)의 주기적 자가보정(Standardization) 직후 로딩값이 변하던 이슈를 데이터 분석과 캘리브레이션 프로토콜 개선으로 해결했습니다.\n• Raw Data를 분석해 특정 구간에서 웹게이지가 자가보정을 수행한 직후 측정값이 튀어 과보정되는 것을 확인했습니다.\n• 원인은 과거 이물 보정 곡선(Dirt Curve) 설정 당시 미세 이물 유입과 샘플 모수 부족으로 인해 보정 계수(DFrac)가 왜곡된 것이었습니다.\n• 이를 해결하기 위해 클리닝 의무화, 샘플 모수 및 측정 횟수를 늘려 기준을 재정립했습니다. 그 결과 이물 보정 계수(DFrac)를 0에 가깝게 안정화하고, 오차율(2RMS)을 낮춰 고객 이슈를 성공적으로 클로징했습니다.`
+    },
+    {
+      id: 25,
+      cat: "직무·지원동기·협업",
+      topic: "##지원동기",
+      question: "우리 회사에 지원하게 된 동기를 말씀해 주세요.",
+      keywords: ["배터리 셀 단품 제조사 vs 최종 모빌리티 완성차 회사", "부품공급사 시각을 넘어 완성차 관점의 엔지니어링 실현"],
+      answer: `• 배터리만을 만드는 회사와 완성차를 만드는 회사는 정말 다르다고 생각합니다.\n• 부품 공급사의 시각에서 더 나아가 완성차 관점의 엔지니어링을 실현해보고 싶어 지원했고요, 업무를 수행할수록 단순히 배터리 셀만을 제조하는 회사를 넘어 최종 모빌리티를 만드는 완성차 회사의 엔지니어링 관점에서 일해보고 싶다고 생각했습니다.`
+    },
+    {
+      id: 26,
+      cat: "직무·지원동기·협업",
+      topic: "##엔지니어링의본질",
+      question: "본인이 생각하는 엔지니어링의 본질은 무엇인가요?",
+      keywords: ["감이나 육안에 의존하던 물리현상 정량화", "데이터와 제어시스템 기반", "누가 돌려도 100% 동일한 재현성 확보"],
+      answer: `• "감이나 육안에 의존하던 물리 현상을 데이터와 제어 시스템으로 정량화해서, 작업자 누가 돌려도 100% 동일한 재현성을 만드는 것"입니다.`
+    },
+    {
+      id: 27,
+      cat: "직무·지원동기·협업",
+      topic: "##현대차 연구/파일럿 라인 인프라 질문",
+      question: "현대차 배터리 조직은 연구 및 파일럿 단계가 많아 기존 양산 라인보다 인프라도 열악하고 프로세스가 덜 잡혀 있을 텐데 괜찮겠습니까?",
+      keywords: ["오히려 가장 크게 기여할 수 있는 이유", "단순 오퍼레이터가 아닌 밑바닥 셋업 엔지니어", "New Form-factor 개발 샘플~시운전~SOP 수립~제어부 개조 경험", "초기 라인 시행착오 단축 무기"],
+      answer: `"오히려 그 점이 제가 현대차에 가장 크게 기여할 수 있는 이유입니다.\n이미 완성된 라인에서 정해진 매뉴얼만 돌리는 오퍼레이터형 엔지니어가 아니라, 저는 New Form-factor 전극의 개발 샘플부터 시운전, SOP 수립, 장비 제어부 개조까지 밑바닥부터 라인을 셋업해 본 경험이 있습니다.\n프로토콜이 정립되지 않은 초기 라인일수록 제가 겪은 수많은 트러블슈팅 데이터와 기계/알고리즘 개조 노하우가 시행착오를 줄이는 강력한 무기가 될 것입니다."`
+    },
+    {
+      id: 28,
+      cat: "직무·지원동기·협업",
+      topic: "##왜 코터만 했어요? / 전극 공정을 지원한 이유",
+      question: "왜 코터 공정만 집중적으로 담당하셨나요? 혹은 여러 파트 중 전극 공정을 지원하신 이유는 무엇인가요?",
+      keywords: ["배터리 품질과 원가의 80% 이상 결정", "후공정(롤프레스/슬리팅)에서 절대 되돌릴 수 없는 코터 결함", "로딩 산포 ➔ N/P Ratio 불균형 ➔ 리튬 덴드라이트·발열 직결", "5년간 R2R 텐션·슬롯다이·건조 열풍·주름 모든 물리 변수 장악"],
+      answer: `"코터가 배터리 품질과 원가의 80% 이상을 결정짓는 핵심 공정이기 때문에 코터 공정을 담당했습니다.\n후공정인 롤프레스나 슬리팅에서 발생하는 문제는 공정 조건으로 일부 보정이 가능하지만, 코터에서 발생한 로딩량 편차, 코팅폭 불균일, 건조 크랙, 바인더 마이그레이션은 후공정에서 절대 되돌릴 수 없습니다.\n특히 미세한 로딩량 산포는 곧바로 셀의 N/P Ratio 불균형을 유발해 급속충전 시 리튬 덴드라이트 석출이나 발열로 이어지는 치명적인 변수입니다.\n지난 5년간 롤투롤(R2R) 장비의 텐션, 슬롯다이 메커니즘, 건조존의 열풍 밸런스, 무지부 주름까지 코터의 모든 물리적 변수를 파악했습니다."`
+    },
+    {
+      id: 29,
+      cat: "직무·지원동기·협업",
+      topic: "##다른 공정도 할 수 있겠어요?",
+      question: "코터 외에 다른 전극 공정이나 인접 공정도 맡아서 수행할 수 있겠습니까?",
+      keywords: ["자신 있음", "팀 내 전후 공정 긴밀한 협업 경험", "빠른 적응력과 꼼꼼한 실행력"],
+      answer: `"자신 있습니다. 맡겨만 주신다면 앞서 PT에서 말씀드렸듯 여러 성과를 냈던 것처럼 확실히 기여하겠습니다.\n당장에 타 공정을 코터만큼 깊게는 모를지라도, 팀 내에서 믹싱·롤프레스·슬리팅 엔지니어들과 매일 같이 협업하며 전후 공정의 인과관계를 다뤄왔기 때문에 누구보다 빠르게 임해서 꼼꼼히 챙길 수 있다고 자신합니다."`
+    },
+    {
+      id: 30,
+      cat: "핵심 프로젝트 (STAR-C)",
+      topic: "###미세라인 감지 로직 상세 설명 (STAR-C)",
+      question: "미세라인 감지 로직 개발 프로젝트에서 구체적으로 무엇을 했는지 상세히 설명해 주세요.",
+      keywords: ["[S] 비전 미검출 미세라인 육안 의존 Loss", "[T] 웹게이지 스캔 로딩 데이터 기반 자동 감지 로직", "[A] 100 Lot 분석, 1% 미만 국부 Data Shift, Dynamic Threshold + EMA, MD/TD 스윙 N회 이탈 알람", "[R] 미세라인 Loss 50% 개선, 수율 0.12% 향상"],
+      answer: `[S - 배경] 비전 검사기에 잡히지 않는 고질 불량인 '미세라인'이 발생하여, 작업자가 육안으로 음영 차이를 확인해야 해서 지속적인 양산 Loss가 발생하고 있었습니다.\n\n[T - 목표] 문제를 시스템적으로 해결하기 위해, 스캔 방식 측정기인 웹게이지 로딩(단위 면적당 무게) 데이터를 분석하여 설비가 자동으로 결함을 감지하는 신규 로직을 개발하기로 목표를 세웠습니다.\n\n[A - 실행] 100 Lot의 데이터를 분석하여 불량 부위의 1% 미만 국부적 Data Shift를 확인하고 로직 개발을 시작했습니다. 노이즈 제거를 위해 Dynamic Threshold와 최근 데이터에 가중치를 두는 지수이동평균(EMA)을 적용했습니다. 또 노이즈와 실제 불량을 구분하기 위해 MD와 TD 방향으로 스윙 변동수를 레시피화했습니다. N번의 스펙 이탈이 발생할 때만 최종 알람이 울리도록 변수를 지정하여 설비에 연동했습니다.\n\n[R - 결과] 그 결과 비전 검사기보다 정밀한 미세라인 감지 로직을 완성하여 미세라인 Loss를 50% 개선하고, 목표 수율 0.12% 향상에 기여했습니다.\n\n[C - 기여] 공정 Ref 데이터를 분석하여 이동평균을 적용하고 노이즈 제거 로직을 설계한 경험을 기반으로, 공정 품질 사고 발생 시 적절한 대책과 로직을 설계하고 변수를 최적화하겠습니다.`
+    },
+    {
+      id: 31,
+      cat: "핵심 프로젝트 (STAR-C)",
+      topic: "[Dynamic Threshold가 뭐에요? (C-O-R-E)",
+      question: "방금 말씀하신 Dynamic Threshold가 무엇이고 왜 도입하셨는지 설명해 주세요.",
+      keywords: ["[C] 고정 스펙(USL/LSL)이 아닌 유동적 불량 판정 기준", "[O] 전체 로딩 산포 속 국부적 저하 센싱 한계 극복", "[R] 이동평균선 대비 일정 이상 편차 발생 시 트리거", "[E] 1% 미만 국부적 저하 정밀 센싱"],
+      answer: `[C - 개념정의] Dynamic Threshold는 고정된 스펙(USL/LSL)으로 잡은 것이 아니라, 데이터의 흐름에 따라 유동적으로 불량을 판정하는 기준선입니다.\n\n[O - 도입배경] 코팅 로딩량 자체에 기본적인 산포가 있기 때문에, 고정 공차(USL/LSL)를 적용하면 그 안에 숨어 있는 1% 미만의 국부적인 로딩 저하를 센싱할 수 없어 도입했습니다.\n\n[R - 작동원리] 이동평균선(추세선) 대비 일정 수준 이상의 급격한 편차가 발생할 때만 트리거되는 Dynamic Threshold 로직을 적용했습니다.\n\n[E - 적용효과] 이로써 전체 산포에 묻히지 않고 국부적인 미세라인 저하를 정밀하게 센싱할 수 있게 되었습니다.`
+    },
+    {
+      id: 32,
+      cat: "핵심 프로젝트 (STAR-C)",
+      topic: "[가중/지수이동평균 (EMA) 필터링이 뭐에요? (C-O-R-E)",
+      question: "가중 이동평균, 즉 지수이동평균 EMA 필터링이 무엇이고 왜 단순 이동평균 대신 사용하셨나요?",
+      keywords: ["[C] 최근 데이터에 가중치를 두는 필터링 방식", "[O] 단순이동평균(SMA)의 과거 N개 균등 반영으로 인한 감지 딜레이 극복", "[R] 지수함수적으로 최신 데이터 높은 가중치 부여", "[E] 노이즈 제거와 신호 지연(Delay) 방지 동시 최적화"],
+      answer: `[C - 개념정의] EMA(Exponential Moving Average)는 지수이동평균으로, 최근 데이터에 더 높은 가중치를 두는 필터링 방식입니다.\n\n[O - 도입배경] 단순 이동평균(SMA)은 과거 N개 데이터를 균등하게 반영하기 때문에, 국부적인 영역에서 급격한 결함 발생 시 반응 딜레이가 생겨 긴 시간이 지나서야 결함을 잡아낼 수 있어 EMA를 도입했습니다.\n\n[R - 작동원리] 지수함수적으로 최신 데이터에 높은 가중치를 두고 과거 데이터를 점진적으로 잊게 만드는 것이 EMA의 원리입니다.\n\n[E - 적용효과] 이로써 윈도우 크기를 다양하게 테스트하여 노이즈 제거와 신호 지연 방지를 동시에 최적화했습니다.`
+    },
+    {
+      id: 33,
+      cat: "핵심 프로젝트 (STAR-C)",
+      topic: "미세조정장치 구체적으로 말해주세요 (STAR-C)",
+      question: "슬롯다이 심 오프셋 미세조정장치 디지털화 프로젝트에 대해 구체적으로 말씀해 주세요.",
+      keywords: ["[S] 타이트한 누적공차 Spec vs 작업자 수동 다이얼게이지 편차", "[T] 미세조절장치 디지털화로 산포 제거 & 수율 0.2% 개선", "[A] 고감속비 웜기어+소형모터, 백래쉬 방지 LVDT 실시간 변위 피드백, 회전수별 코팅폭 변화량 정량화", "[R] 셋업 Loss 18% 개선, 전체 수율 0.2% 향상"],
+      answer: `[S - 배경] 신규 모델 개발 단계에서 고객사가 제시한 타이트한 누적공차 Spec과 공정능력을 만족시켜야 하는 상황이었으나, 병목(Bottleneck)은 작업자가 다이얼게이지를 수동으로 조정하는 과정에서 생긴 작업자 간 편차였습니다.\n\n[T - 목표] 미세조절장치의 디지털화 기술을 도입하여 공정 산포를 제거하고 양산 수율을 0.2% 이상 개선하는 것을 목표로 설정했습니다.\n\n[A - 실행] 먼저 고감속비 웜기어와 소형 모터를 결합하여 모터 1회전당 이동량을 미세화시켰습니다. 특히 기어 유격으로 발생하는 백래쉬(Backlash) 오차를 막기 위해 실제 변위를 측정하는 LVDT 센서를 연동하여 마이크로 단위의 변동을 실시간 측정했습니다. 그래서 실시간 위치 피드백을 통해 목표 타겟값에 정확히 안착하는 정량적 제어 시스템을 구축했습니다. 뿐만 아니라 수차례의 테스트를 통해 모터 회전수에 따른 코팅폭 변화량을 정량화했습니다.\n\n[R - 결과] 그 결과 작업자 편차에 관계없이 타겟 규격 도달 시간을 대폭 단축하여 셋업 Loss를 18% 개선하고, 전체 수율 0.2% 향상을 달성했습니다.\n\n[C - 기여] 기계적 백래쉬를 극복하고 ㎛ 단위 정밀 피드백 시스템을 구축한 장비 개조 경험을 바탕으로, 핵심 장비의 셋업 산포를 제어하고 타겟 수율 조기 달성에 기여하겠습니다.`
+    },
+    {
+      id: 34,
+      cat: "핵심 프로젝트 (STAR-C)",
+      topic: "미세조정장치 각 부품(웜기어, 고감속비, LVDT) 세부 동작원리",
+      question: "미세조정장치에 적용하신 웜기어, 고감속비, 그리고 LVDT 센서 각 부품들의 세부 동작 원리와 채택 이유를 설명해 주세요.",
+      keywords: ["1. 웜기어: 나사선 리드각 원리(회전➔직선) & 토출압력 밀림 방지(Self-locking)", "2. 고감속비: 100:1 감속 시 360도➔3.6도➔1㎛ 직진 분해능 확보", "3. LVDT: 기어 틈새(백래쉬)로 인한 펄스 오차 보완, 기구부 직접 접촉 실측"],
+      answer: `1. 웜기어 (Worm Gear)\n• 나사선의 리드각 원리를 이용해 모터가 기어를 돌려 회전운동을 직선운동으로 변환시킵니다(경사면의 원리를 원통형으로 말아놓은 것).\n• 일반 기어 사용 시 다이 내부 슬러리 토출압력 때문에 기어가 뒤로 밀리는 현상이 발생하기 때문에 역전 방지(Self-locking)가 되는 웜기어를 채택했습니다.\n\n2. 고감속비\n• 모터 회전당 이동량을 최소화하기 위해 고감속비 웜기어를 적용했습니다. 예를 들어 감속비가 100:1이면 모터가 360도 돌아도 기어는 3.6도만 돌고 웜이 1마이크로미터(1㎛) 직진운동하게 되어 초정밀 분해능을 확보할 수 있게 됩니다.\n\n3. LVDT (선형 가변 차동 변압기 센서)\n• 모터에 명령 펄스를 100개 줬다고 해서 기구부가 정확히 100만큼 움직이지 않습니다. 기어 틈새(백래쉬) 때문에 덜 밀릴 수 있기 때문에, 기구부에 직접 닿아있는 LVDT 센서를 적용하여 실제 물리적 이동 측정값을 실시간으로 확인할 수 있게 했습니다.`
+    },
+    {
+      id: 35,
+      cat: "핵심 프로젝트 (STAR-C)",
+      topic: "인라인 IPQC 데이터 검토 자동화 구체적으로 말해주세요 (STAR-C)",
+      question: "인라인 IPQC 데이터 검토 자동화 프로젝트에 대해 구체적으로 말씀해 주세요.",
+      keywords: ["[S] 전 Lot 인라인 데이터 요청 & 헌팅 제거 수작업 일 2시간 소요", "[T] 고객향 데이터 송부 검토 100% 자동화 & 공수 100% 절감", "[A] PRD 작성, 화면 좌표 제어 IoT 자동 다운로드, 룰 기반 헌팅 노이즈 제거, HTML 대시보드 & GUI 배포", "[R] 월 40시간 이상 완전 자동화 (공수 100% 절감)"],
+      answer: `[S - 배경] 신규 모델 생산에서 고객사가 모든 Lot에 대한 인라인 검사기 Data를 요청했습니다. 사내의 여러 시스템에서 데이터를 받고 헌팅(Hunting) Data를 제거해야 해서 엔지니어가 매일 2시간씩 수작업으로 Data를 다운받고 발라내는 비효율이 있었습니다.\n\n[T - 목표] 저는 '고객향 Data 송부 검토 100% 자동화'를 목표로 AI 기술을 활용하여 단독 개발에 착수했고 공수 100% 절감을 목표로 했습니다.\n\n[A - 실행] 먼저 기존 수작업을 매뉴얼화하여 PRD(제품 요구사항 정의서)를 작성했습니다. 마우스 클릭과 화면 좌표를 제어해 IoT 시스템에서 데이터를 자동 다운로드하는 스크립트를 구현하고, 룰 기반 헌팅 노이즈 제거 로직을 개발했습니다. 또한 공정능력 그래프와 일일 품질 현황을 즉시 확인할 수 있는 HTML 대시보드를 구축하고, 코딩을 모르는 팀원도 원클릭으로 쓸 수 있도록 직관적인 GUI 환경으로 배포했습니다.\n\n[R - 결과] 그 결과 월 40시간 이상 수작업을 완전 자동화하여 팀 업무 공수를 100% 절감하는 성과를 거두었습니다.\n\n[C - 기여] 이 경험을 기반으로 공정 데이터 모니터링을 자동화하여 AX(AI Transformation) 업무에 기여하겠습니다.`
+    },
+    {
+      id: 36,
+      cat: "핵심 프로젝트 (STAR-C)",
+      topic: "이미지처리엔진 구체적으로 설명해주세요 (STAR-C)",
+      question: "이미지 처리 엔진을 자체 개발하여 100만 장 불량을 선별한 프로젝트에 대해 구체적으로 설명해 주세요.",
+      keywords: ["[S] 실오라기 Burr 이슈로 출하 지연 위기, 100만 장 선별 필요", "[T] 도메인 지식 접목 이미지 처리 엔진 자체 개발 ➔ 72시간 내 100만 장 전수 선별", "[A] 그레이스케일 음영 낙차(Valley) 분석, ① 이원화 Valley 알고리즘(Lot간 밝기 편차 상쇄), ② 1×7 수직 Bridge Kernel(끊어진 Burr 연속성 복원)", "[R] 장당 평균 5ms 초고속 연산, 100만 장 선별 완수 및 출하 지연 방어"],
+      answer: `[S - 배경] AI를 활용하여 고객을 대응하고, NG 선별 프로그램을 개발하여 출하 지연을 막은 경험이 있습니다. 출하를 앞두고 '실오라기 형태의 Burr' 이슈가 발생하여 출하가 지연되었고, 출하량 감소를 막기 위해 100만 장의 불량 선별이 필요했습니다.\n\n[T - 목표] 사람이 음영 차이로 구분할 수 있다면 AI와 컴퓨터 비전으로도 구분할 수 있다고 판단했습니다. 도메인 지식을 접목한 '이미지 처리 엔진'을 자체 개발하여 72시간 내에 100만 장을 전수 선별하겠다는 과제를 설정했습니다.\n\n[A - 실행] 먼저 표준 샘플의 그레이스케일을 심층 분석하여 전극 경계면에 국소적인 음영 낙차 'Valley'가 존재함을 확인하고 알고리즘을 설계했습니다.\n1. Lot 간 밝기 편차로 인한 과검·미검을 상쇄하기 위해 배경 밝기 레시피를 유동적으로 전환하는 '이원화 Valley 알고리즘'을 구축했습니다.\n2. 실오라기 Burr가 지그재그로 끊어지며 노이즈로 오인되는 문제가 있었는데요, 이를 해결하기 위해 '1×7 수직 Bridge Kernel'을 적용하여 결함 신호의 연속성을 복원했습니다.\n\n[R - 결과] 그 결과 장당 평균 5ms라는 압도적 속도로 100만 장 선별을 완수하여 납기 내 출하 지연을 막아 이슈를 성공적으로 클로징했습니다.\n\n[C - 기여] 문제의 물리적 본질을 데이터와 수학적 알고리즘으로 모델링한 이 경험을 기반으로, 미세 결함 신호를 정밀 포착하는 알고리즘을 개발하겠습니다.`
+    },
+    {
+      id: 37,
+      cat: "핵심 프로젝트 (STAR-C)",
+      topic: "1*7 수직 bridge kernel 자세히 말해주세요 (C-O-R-E)",
+      question: "방금 말씀하신 1 곱하기 7 수직 브릿지 커널에 대해 자세히 설명해 주세요.",
+      keywords: ["[C] 끊겨 찍힌 미세 결함에 수직 다리(Bridge)를 놓아 실선으로 잇는 필터링", "[O] 얇은 실오라기 Burr가 점선처럼 끊겨 먼지 노이즈로 미검되는 문제", "[R] 세로 방향으로 길게 뻗는 도메인 특성 활용, 세로 7픽셀 이내 끊어진 점 연결", "[E] 오검출 없이 연속성 복원, 미검률 0% & 장당 5ms 달성"],
+      answer: `[C - 개념정의]\n1×7 수직 Bridge Kernel은 점선처럼 끊겨서 찍힌 미세 결함에 수직으로 다리(Bridge)를 놓아 하나의 실선으로 이어주는 필터링 기법입니다.\n\n[O - 도입배경]\n실오라기 Burr는 두께가 너무 얇아서 카메라로 찍으면 선이 중간중간 뚝뚝 끊긴 점선처럼 보입니다. 그러다 보니 컴퓨터가 이를 불량이 아니라 단순 먼지 노이즈로 착각해서 지나치는 미검 문제가 있었습니다.\n\n[R - 작동원리]\n이를 해결하기 위해 결함이 세로 방향으로 길게 뻗는다는 도메인 특성을 활용했습니다. 세로 7픽셀 이내로 끊어진 점들이 있으면 그 사이에 다리를 놓아 하나의 긴 선으로 연결해 컴퓨터가 확실한 결함으로 인식하게 만들었습니다.\n\n[E - 적용효과]\n그 결과 주변 노이즈로 인한 오검출 없이 결함의 연속성만 정확히 살려내어 미검률 0%를 달성했고, 장당 5ms의 빠른 연산 속도로 100만 장 검사를 72시간 내에 성공시킬 수 있었습니다.`
+    }
+  ];
+
+  // =========================================================================
+  // 2. 상태 관리 (LocalStorage 연동)
+  // =========================================================================
+  const STORAGE_KEY_QUESTIONS = 'voice_mock_questions_v1';
+  const STORAGE_KEY_STARRED = 'voice_mock_starred_v1';
+  const STORAGE_KEY_DONE = 'voice_mock_done_v1';
+
+  let questions = [];
+  let starredIds = new Set();
+  let doneIds = new Set();
+  let currentCategory = 'all';
+  let currentIndex = 0; // index in `questions`
+  let historyStack = [];
+  let historyPointer = -1;
+
+  // Audio Recording & Web Speech API variables
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let recordedAudioUrl = null;
+  let isRecording = false;
+  let recStartTime = 0;
+  let recTimerInterval = null;
+  let audioCtx = null;
+  let analyser = null;
+  let micStream = null;
+  let animFrameId = null;
+  let recognition = null;
+  let sttText = '';
+
+  function loadState() {
+    try {
+      const savedQ = localStorage.getItem(STORAGE_KEY_QUESTIONS);
+      if (savedQ) {
+        const parsed = JSON.parse(savedQ);
+        // 기본 37개가 모두 포함되도록 병합
+        if (Array.isArray(parsed) && parsed.length >= DEFAULT_QUESTIONS.length) {
+          questions = parsed;
+        } else {
+          questions = [...DEFAULT_QUESTIONS];
+        }
+      } else {
+        questions = [...DEFAULT_QUESTIONS];
+      }
+
+      const savedStar = localStorage.getItem(STORAGE_KEY_STARRED);
+      if (savedStar) starredIds = new Set(JSON.parse(savedStar));
+
+      const savedDone = localStorage.getItem(STORAGE_KEY_DONE);
+      if (savedDone) doneIds = new Set(JSON.parse(savedDone));
+    } catch (e) {
+      questions = [...DEFAULT_QUESTIONS];
+    }
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY_QUESTIONS, JSON.stringify(questions));
+      localStorage.setItem(STORAGE_KEY_STARRED, JSON.stringify([...starredIds]));
+      localStorage.setItem(STORAGE_KEY_DONE, JSON.stringify([...doneIds]));
+    } catch (e) {}
+  }
+
+  // =========================================================================
+  // 3. 필터링 & 랜덤 셔플 출제 엔진
+  // =========================================================================
+  function getFilteredQuestions() {
+    return questions.filter(q => {
+      if (currentCategory === 'all') return true;
+      if (currentCategory === 'starred') return starredIds.has(q.id);
+      return q.cat === currentCategory;
+    });
+  }
+
+  function setCategory(cat, btnEl) {
+    currentCategory = cat;
+    document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+    if (btnEl) btnEl.classList.add('active');
+    renderQuestionList();
+    pickRandomQuestion(false);
+  }
+
+  function pickRandomQuestion(autoSpeakNow = true) {
+    stopSpeaking();
+    if (isRecording) stopRecording(false);
+
+    const pool = getFilteredQuestions();
+    if (pool.length === 0) {
+      alert('해당 카테고리에 질문이 없습니다. 전체 카테고리로 전환합니다.');
+      setCategory('all', document.querySelector('.cat-pill'));
+      return;
+    }
+
+    // 아직 안 푼 문제(doneIds에 없는 문제) 우선 추출
+    let unvisited = pool.filter(q => !doneIds.has(q.id));
+    if (unvisited.length === 0) {
+      // 한 바퀴 다 돌았으면 현재 풀의 done 기록 초기화 후 다시 랜덤
+      pool.forEach(q => doneIds.delete(q.id));
+      unvisited = [...pool];
+    }
+
+    // 현재 보고 있는 문제와 다른 문제 우선 선택
+    const currentQ = questions[currentIndex];
+    let candidates = unvisited.filter(q => !currentQ || q.id !== currentQ.id);
+    if (candidates.length === 0) candidates = unvisited;
+
+    const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+    const idx = questions.findIndex(q => q.id === chosen.id);
+    selectQuestionByIndex(idx, autoSpeakNow, true);
+  }
+
+  function nextSequentialQuestion() {
+    stopSpeaking();
+    if (isRecording) stopRecording(false);
+    const pool = getFilteredQuestions();
+    if (pool.length === 0) return;
+    const currentId = questions[currentIndex]?.id;
+    const pos = pool.findIndex(q => q.id === currentId);
+    const nextPos = (pos + 1) % pool.length;
+    const nextIdx = questions.findIndex(q => q.id === pool[nextPos].id);
+    selectQuestionByIndex(nextIdx, true, true);
+  }
+
+  function prevHistoryQuestion() {
+    if (historyPointer > 0) {
+      stopSpeaking();
+      if (isRecording) stopRecording(false);
+      historyPointer--;
+      const prevIdx = historyStack[historyPointer];
+      selectQuestionByIndex(prevIdx, true, false);
+    }
+  }
+
+  function selectQuestionByIndex(idx, shouldSpeak = true, pushHistory = true) {
+    if (idx < 0 || idx >= questions.length) return;
+    currentIndex = idx;
+    const q = questions[currentIndex];
+    doneIds.add(q.id);
+    saveState();
+
+    if (pushHistory) {
+      historyStack = historyStack.slice(0, historyPointer + 1);
+      historyStack.push(idx);
+      historyPointer = historyStack.length - 1;
+    }
+
+    // UI 업데이트
+    document.getElementById('qNumberBadge').textContent = `Q${String(q.id).padStart(2, '0')}`;
+    document.getElementById('qCatBadge').textContent = q.cat;
+    document.getElementById('qRawTopic').textContent = `원본: ${q.topic}`;
+    document.getElementById('questionText').textContent = `"${q.question}"`;
+
+    // 중요 별표 상태
+    const starBtn = document.getElementById('btnStar');
+    if (starredIds.has(q.id)) {
+      starBtn.classList.add('star-active');
+      starBtn.textContent = '★ 중요 등록됨';
+    } else {
+      starBtn.classList.remove('star-active');
+      starBtn.textContent = '☆ 중요';
+    }
+
+    // 모범 답안 업데이트 및 기본 접기
+    document.getElementById('answerZone').classList.remove('open');
+    document.getElementById('answerToggleArrow').textContent = '▼ 펼치기';
+
+    const kwContainer = document.getElementById('answerKeywords');
+    kwContainer.innerHTML = '';
+    (q.keywords || []).forEach(kw => {
+      const span = document.createElement('span');
+      span.className = 'kw-badge';
+      span.textContent = `🔑 ${kw}`;
+      kwContainer.appendChild(span);
+    });
+    document.getElementById('answerScript').textContent = q.answer;
+
+    // 이전 녹음 플레이어 숨김 초기화
+    document.getElementById('playbackBox').classList.remove('ready');
+    document.getElementById('btnReplayMyVoice').style.display = 'none';
+    document.getElementById('sttTranscript').textContent = '녹음을 시작하면 내가 말한 답변이 이곳에 텍스트로 기록됩니다.';
+    document.getElementById('recTimer').textContent = '00:00';
+
+    updateDeckProgress();
+    renderQuestionList();
+
+    // 자동 음성 읽기
+    if (shouldSpeak && document.getElementById('optAutoSpeak').checked) {
+      setTimeout(() => speakCurrentQuestion(), 180);
+    }
+  }
+
+  function updateDeckProgress() {
+    const pool = getFilteredQuestions();
+    const doneInPool = pool.filter(q => doneIds.has(q.id)).length;
+    const remaining = Math.max(0, pool.length - doneInPool);
+    document.getElementById('deckProgress').textContent =
+      `출제 완료: ${doneInPool} / ${pool.length} (남은 미출제: ${remaining})`;
+    document.getElementById('count-all').textContent = questions.length;
+    document.getElementById('sidebarTotalCount').textContent = pool.length;
+  }
+
+  function resetDeck() {
+    doneIds.clear();
+    saveState();
+    updateDeckProgress();
+    renderQuestionList();
+  }
+
+  function toggleStarCurrent() {
+    const q = questions[currentIndex];
+    if (!q) return;
+    if (starredIds.has(q.id)) starredIds.delete(q.id);
+    else starredIds.add(q.id);
+    saveState();
+    selectQuestionByIndex(currentIndex, false, false);
+  }
+
+  function toggleBlindMode() {
+    const isBlind = document.getElementById('optBlindMode').checked;
+    const qText = document.getElementById('questionText');
+    if (isBlind) qText.classList.add('blind');
+    else qText.classList.remove('blind');
+  }
+
+  // 블라인드 상태에서 질문 클릭 시 일시 확인
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('questionText').addEventListener('click', function() {
+      if (this.classList.contains('blind')) {
+        this.classList.remove('blind');
+      } else if (document.getElementById('optBlindMode').checked) {
+        this.classList.add('blind');
+      }
+    });
+  });
+
+  // =========================================================================
+  // 4. TTS (음성 합성 - 면접관 목소리로 질문 읽어주기)
+  // =========================================================================
+  function getKoreanVoice() {
+    if (!('speechSynthesis' in window)) return null;
+    const voices = window.speechSynthesis.getVoices();
+    return (
+      voices.find(v => v.lang.includes('ko') && (v.name.includes('Natural') || v.name.includes('Online') || v.name.includes('Google'))) ||
+      voices.find(v => v.lang.includes('ko')) ||
+      null
+    );
+  }
+
+  function speakCurrentQuestion() {
+    const q = questions[currentIndex];
+    if (!q) return;
+    speakText(q.question, true);
+  }
+
+  function speakAnswerScript() {
+    const q = questions[currentIndex];
+    if (!q) return;
+    const cleanText = q.answer.replace(/[\[\]•➔]/g, ' ');
+    speakText(cleanText, false);
+  }
+
+  function speakText(text, isQuestion = true) {
+    if (!('speechSynthesis' in window)) {
+      alert('이 브라우저는 음성 읽어주기(TTS)를 지원하지 않습니다.');
+      return;
+    }
+    window.speechSynthesis.cancel();
+
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'ko-KR';
+    const voice = getKoreanVoice();
+    if (voice) utter.voice = voice;
+    utter.rate = parseFloat(document.getElementById('ttsRate').value || '1.0');
+    utter.pitch = 1.0;
+
+    const zone = document.getElementById('interviewerZone');
+    utter.onstart = () => {
+      zone.classList.add('speaking');
+    };
+    utter.onend = () => {
+      zone.classList.remove('speaking');
+      // 질문 낭독 완료 후 자동 녹음 시작 옵션이 켜져 있으면 바로 녹음 시작
+      if (isQuestion && document.getElementById('optAutoRecord').checked && !isRecording) {
+        startRecording();
+      }
+    };
+    utter.onerror = () => {
+      zone.classList.remove('speaking');
+    };
+
+    window.speechSynthesis.speak(utter);
+  }
+
+  function stopSpeaking() {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    document.getElementById('interviewerZone').classList.remove('speaking');
+  }
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => getKoreanVoice();
+  }
+
+  // =========================================================================
+  // 5. 내 답변 음성 녹음 (MediaRecorder + 실시간 파형 + STT 받아쓰기)
+  // =========================================================================
+  function toggleRecording() {
+    if (isRecording) {
+      stopRecording(true);
+    } else {
+      startRecording();
+    }
+  }
+
+  async function startRecording() {
+    stopSpeaking();
+    try {
+      micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (err) {
+      alert('마이크 권한을 허용해 주세요! 브라우저 주소창 왼쪽의 자물쇠/마이크 아이콘에서 허용할 수 있습니다.');
+      return;
+    }
+
+    audioChunks = [];
+    mediaRecorder = new MediaRecorder(micStream);
+
+    mediaRecorder.ondataavailable = event => {
+      if (event.data && event.data.size > 0) {
+        audioChunks.push(event.data);
+      }
+    };
+
+    mediaRecorder.onstop = () => {
+      const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+      if (recordedAudioUrl) URL.revokeObjectURL(recordedAudioUrl);
+      recordedAudioUrl = URL.createObjectURL(audioBlob);
+
+      const audioEl = document.getElementById('recordedAudio');
+      audioEl.src = recordedAudioUrl;
+      audioEl.playbackRate = parseFloat(document.getElementById('playbackSpeed').value || '1.0');
+
+      const dlLink = document.getElementById('downloadAudioLink');
+      const q = questions[currentIndex];
+      dlLink.href = recordedAudioUrl;
+      dlLink.download = `Q${String(q.id).padStart(2, '0')}_내답변녹음.webm`;
+
+      document.getElementById('playbackBox').classList.add('ready');
+      document.getElementById('btnReplayMyVoice').style.display = 'inline-flex';
+
+      if (document.getElementById('optAutoPlayAnswer').checked) {
+        // 모범답안 자동 펼치기 및 내 녹음 재생
+        document.getElementById('answerZone').classList.add('open');
+        document.getElementById('answerToggleArrow').textContent = '▲ 접기';
+        audioEl.play().catch(() => {});
+      }
+    };
+
+    mediaRecorder.start();
+    isRecording = true;
+
+    // UI 상태 전환
+    document.getElementById('recorderZone').classList.add('recording');
+    const btn = document.getElementById('btnRecordToggle');
+    btn.classList.add('is-recording');
+    btn.innerHTML = '⏹️ 답변 완료 및 녹음 종료 (Space)';
+    document.getElementById('recStatusText').textContent = '🔴 녹음 중... 면접관에게 말씀하듯 답변해 주세요';
+    document.getElementById('visPlaceholder').style.display = 'none';
+
+    // 타이머 시작
+    recStartTime = Date.now();
+    clearInterval(recTimerInterval);
+    recTimerInterval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - recStartTime) / 1000);
+      const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
+      const secs = String(elapsed % 60).padStart(2, '0');
+      document.getElementById('recTimer').textContent = `${mins}:${secs}`;
+    }, 250);
+
+    // 오디오 파형 비주얼라이저 시작
+    startVisualizer(micStream);
+
+    // 음성 인식(STT) 시작
+    startSTT();
+  }
+
+  function stopRecording(triggerPlayback = true) {
+    if (!isRecording) return;
+    isRecording = false;
+    clearInterval(recTimerInterval);
+
+    if (!triggerPlayback && mediaRecorder) {
+      mediaRecorder.onstop = null;
+    }
+
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+    }
+    if (micStream) {
+      micStream.getTracks().forEach(track => track.stop());
+    }
+    stopVisualizer();
+    stopSTT();
+
+    document.getElementById('recorderZone').classList.remove('recording');
+    const btn = document.getElementById('btnRecordToggle');
+    btn.classList.remove('is-recording');
+    btn.innerHTML = '🎙️ 다시 녹음하기 (Space)';
+    document.getElementById('recStatusText').textContent = '녹음 완료 — 아래 플레이어에서 내 답변을 들어보세요';
+    document.getElementById('visPlaceholder').style.display = 'block';
+  }
+
+  function playRecordedAudio() {
+    const audioEl = document.getElementById('recordedAudio');
+    if (audioEl && audioEl.src) {
+      audioEl.currentTime = 0;
+      audioEl.play();
+    }
+  }
+
+  function changePlaybackSpeed() {
+    const audioEl = document.getElementById('recordedAudio');
+    if (audioEl) {
+      audioEl.playbackRate = parseFloat(document.getElementById('playbackSpeed').value || '1.0');
+    }
+  }
+
+  // 오디오 파형 비주얼라이저
+  function startVisualizer(stream) {
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const source = audioCtx.createMediaStreamSource(stream);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 128;
+      source.connect(analyser);
+
+      const canvas = document.getElementById('audioCanvas');
+      const ctx = canvas.getContext('2d');
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+
+      function draw() {
+        if (!isRecording) return;
+        animFrameId = requestAnimationFrame(draw);
+        analyser.getByteFrequencyData(dataArray);
+
+        ctx.fillStyle = '#070b14';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const barWidth = (canvas.width / bufferLength) * 1.6;
+        let x = 0;
+        for (let i = 0; i < bufferLength; i++) {
+          const barHeight = (dataArray[i] / 255) * canvas.height;
+          ctx.fillStyle = `rgb(244, ${Math.min(180, 63 + dataArray[i] / 2)}, 120)`;
+          ctx.fillRect(x, canvas.height - barHeight, barWidth - 2, barHeight);
+          x += barWidth;
+        }
+      }
+      draw();
+    } catch (e) {}
+  }
+
+  function stopVisualizer() {
+    if (animFrameId) cancelAnimationFrame(animFrameId);
+    if (audioCtx && audioCtx.state !== 'closed') {
+      audioCtx.close().catch(() => {});
+    }
+  }
+
+  // Web Speech API (STT 실시간 받아쓰기)
+  function startSTT() {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) {
+      document.getElementById('sttState').textContent = '브라우저 미지원 (음성 녹음은 정상 작동)';
+      return;
+    }
+    try {
+      recognition = new SpeechRec();
+      recognition.lang = 'ko-KR';
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      sttText = '';
+      document.getElementById('sttTranscript').textContent = '';
+      document.getElementById('sttState').textContent = '🟢 음성 인식 중...';
+
+      recognition.onresult = event => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            sttText += transcript + ' ';
+          } else {
+            interim += transcript;
+          }
+        }
+        document.getElementById('sttTranscript').textContent = (sttText + interim).trim() || '말씀하시면 텍스트로 변환됩니다...';
+      };
+
+      recognition.onerror = () => {};
+      recognition.onend = () => {
+        if (isRecording) {
+          try { recognition.start(); } catch (e) {}
+        } else {
+          document.getElementById('sttState').textContent = '완료';
+        }
+      };
+      recognition.start();
+    } catch (e) {}
+  }
+
+  function stopSTT() {
+    if (recognition) {
+      try { recognition.stop(); } catch (e) {}
+    }
+    document.getElementById('sttState').textContent = '대기';
+  }
+
+  // =========================================================================
+  // 6. 우측 질문 목록 렌더링 & 모범답안 토글 & 모달 편집
+  // =========================================================================
+  function toggleAnswerBox() {
+    const zone = document.getElementById('answerZone');
+    zone.classList.toggle('open');
+    const isOpen = zone.classList.contains('open');
+    document.getElementById('answerToggleArrow').textContent = isOpen ? '▲ 접기' : '▼ 펼치기';
+  }
+
+  function renderQuestionList() {
+    const container = document.getElementById('questionListContainer');
+    const query = (document.getElementById('searchBox').value || '').toLowerCase().trim();
+    const pool = getFilteredQuestions().filter(q => {
+      if (!query) return true;
+      return (
+        q.question.toLowerCase().includes(query) ||
+        q.topic.toLowerCase().includes(query) ||
+        q.answer.toLowerCase().includes(query)
+      );
+    });
+
+    container.innerHTML = '';
+    const currentId = questions[currentIndex]?.id;
+
+    pool.forEach(q => {
+      const div = document.createElement('div');
+      div.className = 'q-item' + (q.id === currentId ? ' current' : '') + (doneIds.has(q.id) ? ' done' : '');
+      div.onclick = () => {
+        const idx = questions.findIndex(item => item.id === q.id);
+        selectQuestionByIndex(idx, true, true);
+      };
+
+      div.innerHTML = `
+        <span class="q-item-num">Q${String(q.id).padStart(2, '0')}</span>
+        <div class="q-item-text">
+          <div style="font-size:0.73rem; color:#38bdf8; margin-bottom:2px;">${q.topic}</div>
+          <div>${q.question}</div>
+        </div>
+        ${starredIds.has(q.id) ? '<span class="q-item-star">★</span>' : ''}
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  // 질문 추가/수정 모달
+  function openAddModal() {
+    document.getElementById('modalTitle').textContent = '➕ 새 면접 질문 추가';
+    document.getElementById('editQuestionId').value = '';
+    document.getElementById('inputTopic').value = '';
+    document.getElementById('inputQuestion').value = '';
+    document.getElementById('inputKeywords').value = '';
+    document.getElementById('inputAnswer').value = '';
+    document.getElementById('qaModal').classList.add('show');
+  }
+
+  function openEditCurrentModal() {
+    const q = questions[currentIndex];
+    if (!q) return;
+    document.getElementById('modalTitle').textContent = `✏️ Q${String(q.id).padStart(2, '0')} 질문 및 답변 수정`;
+    document.getElementById('editQuestionId').value = q.id;
+    document.getElementById('inputCategory').value = q.cat;
+    document.getElementById('inputTopic').value = q.topic;
+    document.getElementById('inputQuestion').value = q.question;
+    document.getElementById('inputKeywords').value = (q.keywords || []).join(', ');
+    document.getElementById('inputAnswer').value = q.answer;
+    document.getElementById('qaModal').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('qaModal').classList.remove('show');
+  }
+
+  function saveQuestionModal() {
+    const editId = document.getElementById('editQuestionId').value;
+    const cat = document.getElementById('inputCategory').value;
+    const topic = document.getElementById('inputTopic').value.trim() || '커스텀 질문';
+    const question = document.getElementById('inputQuestion').value.trim();
+    const keywords = document.getElementById('inputKeywords').value
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+    const answer = document.getElementById('inputAnswer').value.trim();
+
+    if (!question) {
+      alert('면접관 질문 문장을 입력해 주세요.');
+      return;
+    }
+
+    if (editId) {
+      const idx = questions.findIndex(q => String(q.id) === String(editId));
+      if (idx !== -1) {
+        questions[idx] = { ...questions[idx], cat, topic, question, keywords, answer };
+        saveState();
+        closeModal();
+        selectQuestionByIndex(idx, false, false);
+      }
+    } else {
+      const newId = questions.reduce((max, q) => Math.max(max, q.id), 0) + 1;
+      questions.push({ id: newId, cat, topic, question, keywords, answer });
+      saveState();
+      closeModal();
+      selectQuestionByIndex(questions.length - 1, true, true);
+    }
+  }
+
+  // =========================================================================
+  // 7. 키보드 단축키 지원
+  // =========================================================================
+  window.addEventListener('keydown', e => {
+    const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+
+    if (e.code === 'Space') {
+      e.preventDefault();
+      toggleRecording();
+    } else if (e.key === 'n' || e.key === 'N' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      pickRandomQuestion(true);
+    } else if (e.key === 'r' || e.key === 'R') {
+      e.preventDefault();
+      speakCurrentQuestion();
+    } else if (e.key === 'p' || e.key === 'P') {
+      e.preventDefault();
+      playRecordedAudio();
+    } else if (e.key === 'a' || e.key === 'A') {
+      e.preventDefault();
+      toggleAnswerBox();
+    }
+  });
+
+  // 초기화 실행
+  window.addEventListener('DOMContentLoaded', () => {
+    loadState();
+    pickRandomQuestion(false);
+  });
+</script>
+
+</body>
+</html>
