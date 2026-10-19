@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>현대자동차 경력면접 — 핵심 꼬리질문 14선 & 마스터 정리본 (261019_ver1)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1120;
+      --surface: #111827;
+      --surface-hover: #1e293b;
+      --border: #1f2937;
+      --border-accent: #38bdf8;
+      --text: #f8fafc;
+      --text-sub: #cbd5e1;
+      --text-muted: #94a3b8;
+      --hyundai-blue: #002c5f;
+      --accent: #38bdf8;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --purple: #a855f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #071326 0%, #0f2447 100%);
+      border-bottom: 1px solid #1e3a5f;
+      padding: 24px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+    }
+
+    .container {
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge-hmc {
+      background: #002c5f;
+      border: 1px solid #38bdf8;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.78rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .mode-tabs {
+      display: flex;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid #334155;
+    }
+
+    .mode-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-sub);
+      padding: 8px 16px;
+      border-radius: 7px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mode-tab.active {
+      background: var(--accent);
+      color: #0b1120;
+    }
+
+    .controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: var(--text-sub);
+      padding: 6px 13px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .pill:hover {
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .pill.active {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .right-tools {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .search-input {
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #fff;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      width: 220px;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .btn-small {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: var(--text-sub);
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-small:hover {
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    main {
+      padding: 24px 20px;
+    }
+
+    /* Excluded notice box */
+    .excluded-banner {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      font-size: 0.86rem;
+    }
+
+    .excluded-title {
+      color: #34d399;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .excluded-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .ex-tag {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #94a3b8;
+      padding: 2px 9px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      text-decoration: line-through;
+    }
+
+    /* Cards */
+    .qa-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .qa-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .qa-card:hover {
+      border-color: #334155;
+    }
+
+    .qa-header {
+      padding: 16px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      user-select: none;
+    }
+
+    .qa-header:hover {
+      background: rgba(30, 41, 59, 0.4);
+    }
+
+    .qa-title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .qa-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .q-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 5px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .q-cat {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 5px;
+    }
+
+    .cat-proj { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .cat-proc { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .cat-fit  { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+    .q-trigger {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .q-question {
+      font-size: 1.04rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.45;
+    }
+
+    .toggle-icon {
+      color: var(--accent);
+      font-size: 0.9rem;
+      font-weight: 800;
+      padding-top: 4px;
+      transition: transform 0.2s;
+    }
+
+    .qa-card.open .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .qa-body {
+      display: none;
+      padding: 0 20px 18px;
+      border-top: 1px solid rgba(51, 65, 85, 0.5);
+      background: rgba(15, 23, 42, 0.55);
+    }
+
+    .qa-card.open .qa-body {
+      display: block;
+    }
+
+    .intent-line {
+      margin-top: 14px;
+      padding: 8px 12px;
+      background: rgba(244, 63, 94, 0.1);
+      border-left: 3px solid var(--rose);
+      border-radius: 4px;
+      font-size: 0.84rem;
+      color: #fda4af;
+    }
+
+    .key-point {
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: rgba(56, 189, 248, 0.1);
+      border-left: 3px solid var(--accent);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #e0f2fe;
+    }
+
+    .script-box {
+      margin-top: 12px;
+      padding: 14px 16px;
+      background: #0b1324;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      color: var(--text-sub);
+      line-height: 1.7;
+    }
+
+    .script-box strong {
+      color: #38bdf8;
+      font-weight: 700;
+    }
+
+    /* Tab 2: Master Organized Note */
+    #tab-master {
+      display: none;
+    }
+
+    .section-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .section-block h2 {
+      font-size: 1.15rem;
+      color: var(--accent);
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+
+    .section-block h3 {
+      font-size: 0.98rem;
+      color: #fde047;
+      margin: 14px 0 8px;
+    }
+
+    .section-block ul {
+      padding-left: 20px;
+      color: var(--text-sub);
+      font-size: 0.9rem;
+    }
+
+    .section-block li {
+      margin-bottom: 6px;
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-top: 8px;
+    }
+
+    .summary-table th, .summary-table td {
+      border: 1px solid #1e293b;
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .summary-table th {
+      background: #1e293b;
+      color: var(--accent);
+      font-weight: 700;
+      width: 22%;
+    }
+
+    @media (max-width: 768px) {
+      .search-input { width: 100%; }
+      .header-top, .controls-row { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-top">
+      <div class="title-group">
+        <span class="badge-hmc">HYUNDAI MOTOR</span>
+        <h1>전극 경력면접 필수 꼬리질문 14선 (261019_ver1 맞춤형)</h1>
+      </div>
+      <div class="mode-tabs">
+        <button class="mode-tab active" onclick="switchTab('followup', this)">🎯 신규 핵심 꼬리질문 (14선)</button>
+        <button class="mode-tab" onclick="switchTab('master', this)">📋 원본 분류 정리본 보기</button>
+      </div>
+    </div>
+
+    <div class="controls-row" id="followup-controls">
+      <div class="filter-pills">
+        <button class="pill active" onclick="filterCards('all', this)">전체 (14)</button>
+        <button class="pill" onclick="filterCards('proj', this)">프로젝트 심층 검증 (6)</button>
+        <button class="pill" onclick="filterCards('proc', this)">공정·트러블슈팅 급소 (5)</button>
+        <button class="pill" onclick="filterCards('fit', this)">도메인·완성차 관점 (3)</button>
+      </div>
+      <div class="right-tools">
+        <input type="text" class="search-input" id="searchInput" placeholder="키워드 검색 (예: 웹게이지, 주름, 절연...)" oninput="searchCards()">
+        <button class="btn-small" onclick="toggleAll(true)">모두 펼치기</button>
+        <button class="btn-small" onclick="toggleAll(false)">모두 접기</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <!-- TAB 1: FOLLOW-UP QUESTIONS -->
+  <div id="tab-followup">
+    <div class="excluded-banner">
+      <div class="excluded-title">✅ 대본에 이미 작성되어 제외한 질문 (중복 배제 완료)</div>
+      <div class="excluded-tags">
+        <span class="ex-tag">Dynamic Threshold 정의</span>
+        <span class="ex-tag">EMA vs SMA 지연 원리</span>
+        <span class="ex-tag">웜기어 채택 이유(밀림 방지)</span>
+        <span class="ex-tag">고감속비(100:1) 분해능 원리</span>
+        <span class="ex-tag">LVDT 적용 이유(백래쉬 보완)</span>
+        <span class="ex-tag">웹게이지 자가보정(Dirt Curve) 기본 과정</span>
+        <span class="ex-tag">바인더 마이그레이션 5단계 원리</span>
+        <span class="ex-tag">코팅 4대 불량(로·코·주·표) 기본 정의</span>
+        <span class="ex-tag">갈등 해결 / 일정 압박 / 안전 가치관</span>
+      </div>
+    </div>
+
+    <div class="qa-grid" id="qaGrid">
+
+      <!-- Q1 -->
+      <div class="qa-card open" data-cat="proj">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q01</span>
+              <span class="q-cat cat-proj">Project 1 · 미세라인 감지 로직</span>
+              <span class="q-trigger">발표문 중 "웹게이지 스캔 데이터로 미세라인 감지"</span>
+            </div>
+            <div class="q-question">"웹게이지는 고정된 게 아니라 폭 방향(TD)으로 왕복(지그재그) 스캔하는데, 어떻게 좁은 미세라인을 놓치지 않고 잡아낼 수 있었나요?"</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 스캔 타입 측정기(Web Gauge)의 물리적 맹점(Blind Spot)을 이해하고 로직을 짰는지 확인</div>
+          <div class="key-point">💡 핵심 한 줄: 단발성 점(Point) 결함은 놓칠 수 있지만, '미세라인'은 주행 방향(MD)으로 길게 이어지므로 매 스윙마다 동일 TD 좌표에서 반복 검출됩니다.</div>
+          <div class="script-box">
+            "맞습니다. 웹게이지 스캔 주기가 약 6.8초여서 단발성 점 결함은 지그재그 스캔 특성상 놓칠 수 있습니다. 하지만 다이 립 이물로 인한 <strong>미세라인 불량은 주행 방향(MD)으로 수십 미터 이상 연속해서 발생</strong>하는 물리적 특징이 있습니다.<br>
+            따라서 헤드가 왕복 스윙할 때 <strong>동일한 폭 방향(TD) 좌표 구간에서 1% 미만의 로딩 Drop이 $N$회 연속으로 반복 감지될 때만 알람을 울리도록</strong> 설계하여, 지그재그 스캔의 한계를 극복하고 노이즈 오알람까지 동시에 잡았습니다."
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="qa-card open" data-cat="proj">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q02</span>
+              <span class="q-cat cat-proj">Project 1 · 미세라인 감지 로직</span>
+              <span class="q-trigger">발표문 중 "1% 미만 국부적 Data Shift 및 N번 스펙 이탈 설정"</span>
+            </div>
+            <div class="q-question">"1% 미만 로딩 저하는 펌프 맥동이나 Foil 두께 편차로도 흔히 나오는데, 초기 적용 때 가짜 알람(과검)으로 라인이 멈추진 않았나요?"</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 양산 라인에 신규 알람 로직을 적용할 때의 리스크 관리(Shadow 테스트 및 파라미터 튜닝) 경험 검증</div>
+          <div class="key-point">💡 핵심 한 줄: 즉시 인터록을 걸지 않고 '모니터링(Shadow) 모드'로 먼저 검증했으며, 양 끝단(Edge) 마스킹과 연속 스윙 횟수($N$) 최적화로 과검을 잡았습니다.</div>
+          <div class="script-box">
+            "초기에 바로 설비 정지 인터록을 걸면 과검으로 양산 Loss가 날 수 있어, 먼저 <strong>알람만 기록하는 섀도우(모니터링) 모드로 100 Lot 데이터를 검증</strong>했습니다.<br>
+            분석해 보니 펌프 맥동은 전 폭(TD 전체)이 함께 흔들리고, 미세라인은 <strong>특정 TD 좌표에서만 국부적으로 꺾이는 차이</strong>가 있었습니다. 또한 코팅 양 끝단 슬라이딩 구간의 자연스러운 두께 변화가 오알람을 유발해 <strong>양 끝단 Edge 구간은 마스킹(제외) 처리</strong>하고, EMA 윈도우와 연속 감지 횟수($N$)를 최적화한 뒤에 정식 알람으로 연동했습니다."
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="qa-card open" data-cat="proj">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q03</span>
+              <span class="q-cat cat-proj">Project 2 · Shim Offset 전동화</span>
+              <span class="q-trigger">노트 중 "심오프셋 조정 1마이크로당 코팅폭 변화량 확인"</span>
+            </div>
+            <div class="q-question">"심(Shim) 오프셋을 1㎛ 움직일 때 실제 코팅폭은 얼마나 변하던가요? 코팅 속도나 유량이 바뀌면 그 비율도 달라지지 않나요?"</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 본인이 직접 실험해서 얻은 정량적 감도(Sensitivity) 개념과 유체역학적 상관관계 이해도 확인</div>
+          <div class="key-point">💡 핵심 한 줄: 심을 움직인 거리와 코팅폭이 1:1로 변하지 않으며(다이 내부 압력·점도 영향), 모델별 속도/점도 조건에 따른 변환 테이블(Gain 값)을 레시피화했습니다.</div>
+          <div class="script-box">
+            "기구적으로 심 오프셋을 $10\,\mu\text{m}$ 이동시킨다고 코팅폭이 똑같이 $10\,\mu\text{m}$ 변하지 않고, 슬러리가 토출 후 퍼지는 <strong>비드(Bead) 팽창과 다이 내부 압력 분포 때문에 비선형적인 비례 계수(Gain)</strong>를 가집니다.<br>
+            말씀하신 대로 코팅 속도(주속비)나 슬러리 점도·온도가 바뀌면 토출 압력이 달라져 변화량도 달라지기 때문에, <strong>모델별 표준 코팅 속도와 유량 조건에서 심 이동량($\mu\text{m}$) 대비 실제 코팅폭 변화량($\text{mm}$)의 상관 기울기를 실험적으로 도출해 레시피 테이블화</strong>하여 한 번에 타겟 폭에 안착시켰습니다."
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="qa-card open" data-cat="proj">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q04</span>
+              <span class="q-cat cat-proj">Project 2 · Shim Offset 전동화</span>
+              <span class="q-trigger">발표문 중 "작업성을 유지하면서 디지털 미세조절장치 개발"</span>
+            </div>
+            <div class="q-question">"슬롯다이는 주기적으로 분해해서 세정하고 심을 교체해야 하는데, 모터와 LVDT를 달면 다이 해체·조립이 불편해지거나 영점이 틀어지지 않나요?"</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 현장 작업성(PM/세정)과 조립 재현성(Zero-Setting)까지 고려한 진짜 현장형 엔지니어인지 확인</div>
+          <div class="key-point">💡 핵심 한 줄: 다이 세정 시 탈부착이 쉽도록 모듈형 브라켓으로 설계했고, 재조립 후에는 LVDT 절대 영점(Zero-cal) 세팅 SOP로 편차를 없앴습니다.</div>
+          <div class="script-box">
+            "현장에서도 가장 우려했던 부분이라 <strong>'심 조립 SOP'</strong>와 연동해 두 가지로 해결했습니다.<br>
+            첫째, 다이 분해 세정 시 조절장치 모듈 전체를 볼트 몇 개로 간편하게 분리·결합할 수 있는 구조로 설계해 PM 시간 증가를 막았습니다.<br>
+            둘째, 다이를 재조립할 때 토크렌치로 균일한 체결 토크를 준 뒤, <strong>다이 립 기준면에서 LVDT 영점(Zero-Point)을 초기화하는 표준 절차</strong>를 잡아 누가 조립하든 동일한 기준점에서 오프셋 제어가 시작되도록 만들었습니다."
+          </div>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="qa-card open" data-cat="proj">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q05</span>
+              <span class="q-cat cat-proj">Project 3 · 고객향 데이터 자동화</span>
+              <span class="q-trigger">발표문 중 "단순 헌팅 구간을 자동으로 Scrap하고 그래프 출력"</span>
+            </div>
+            <div class="q-question">"인라인 데이터에서 '헌팅 구간을 자동으로 제거(Scrap)'했다고 하셨는데, 고객사가 불량 데이터를 임의로 지웠다고 오해할 수 있지 않나요? 어떤 기준으로 발라냈나요?"</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 데이터 무결성(Data Integrity) 및 고객사 품질 감사(Audit) 관점에서 노이즈 제거의 명확한 공학적 기준 확인</div>
+          <div class="key-point">💡 핵심 한 줄: 임의 삭제가 아니라, 고객사와 사전 합의된 '비유효 측정 구간(초기 가감속, 이음매 테이프, 게이지 자가보정 구간 등)'만 룰 기반으로 마스킹했습니다.</div>
+          <div class="script-box">
+            "데이터 무결성이 가장 중요하기 때문에 임의로 튀는 값을 지운 것이 절대 아닙니다. 코팅 시작/종료 시의 <strong>가감속 구간, 무지부-유지부 경계(Start/End)에서 센서가 걸쳐 찍히는 과도 구간, 그리고 실물로 이미 Scrap(폐기) 마킹된 초기 조건조정 구간</strong>은 실제 출하 양품 구간이 아닌데도 Raw Data에 포함되어 $C_{pk}$를 왜곡하고 있었습니다.<br>
+            따라서 고객사와 사전 합의된 <strong>물리적 비유효 구간 조건을 룰(Rule)로 정의</strong>하여 해당 구간의 노이즈만 정확히 제외하고, 순수 양품 출하 구간에 대한 공정능력만 자동 산출되도록 투명하게 구현했습니다."
+          </div>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="qa-card open" data-cat="proj">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q06</span>
+              <span class="q-cat cat-proj">Project 4 · 슬리팅 Burr 100만장 선별</span>
+              <span class="q-trigger">노트 중 "1×7 수직 Bridge Kernel 적용, 72시간 내 100만장 선별"</span>
+            </div>
+            <div class="q-question">"왜 딥러닝 대신 고전 비전 알고리즘(이원화 Valley + 1×7 커널)을 쓰셨고, 진짜 불량이 빠져나간 '미검(Under-kill)'이 없다는 걸 어떻게 보증했나요?"</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 알고리즘 선택의 합리성(납기·설명 가능성)과 품질 출하 보증(검증 프로세스) 확인</div>
+          <div class="key-point">💡 핵심 한 줄: 72시간 타임어택과 고객 설득(수치적 근거 제시)을 위해 설명 가능한 비전 알고리즘을 택했고, 임계치를 보수적(과검 허용, 미검 0%)으로 잡은 뒤 표본 교차 검증으로 보증했습니다.</div>
+          <div class="script-box">
+            "출하까지 72시간밖에 없는 상황에서 딥러닝은 학습 데이터 라벨링 시간이 부족했고, 무엇보다 고객사에게 <strong>'왜 이 이미지가 양품인지'를 그레이스케일 낙차와 픽셀 단위로 명확히 설명</strong>해야 출하 승인이 가능했습니다. 실오라기 Burr가 슬리팅 주행 방향(수직)으로 3~5픽셀씩 끊어져 나타나는 물리적 특성 때문에 $1\times 7$ 수직 커널이 가장 적합했습니다.<br>
+            미검 방지를 위해 임계치를 보수적으로 설정해 <strong>과검(Over-kill)은 소량 허용하되 미검(Under-kill)은 0%가 되도록</strong> 설계했고, AI가 걸러낸 NG 후보군만 엔지니어가 육안 재검수하여 100만 장을 시간 내에 완벽히 방어했습니다."
+          </div>
+        </div>
+      </div>
+
+      <!-- Q7 -->
+      <div class="qa-card open" data-cat="proj">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q07</span>
+              <span class="q-cat cat-proj">Project 5 · 웹게이지 자가보정 이슈</span>
+              <span class="q-trigger">노트 중 "Dirt Curve 왜곡으로 자가보정 직후 측정값 급변 해결"</span>
+            </div>
+            <div class="q-question">"Dirt Calibration 오류 이후 개선하기 전까지 수개월간 ±0.4~0.5 gsm 과보정된 상태로 생산된 물량(Risk Range)은 폐기했나요, 어떻게 처리했나요?"</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 품질 이슈 발생 시 기생산 물량(Risk Range)에 대한 손실 최소화 및 고객 설득 논리 검증</div>
+          <div class="key-point">💡 핵심 한 줄: 실제 코팅 두께 불량이 아닌 '측정기 보정 오차'였음을 Raw Data와 실물 QA 측정값 대조로 증명하여 전량 폐기 없이 방어했습니다.</div>
+          <div class="script-box">
+            "먼저 8월 Dirt Calibration 시점부터 개선 전까지 생산된 물량을 Risk Range로 명확히 묶었습니다. 핵심은 <strong>실제 코팅된 슬러리 로딩량이 흔들린 것이 아니라, 측정기(웹게이지)의 이물 보정 계수(`DFrac`)가 과보정되어 화면상 수치만 튄 것</strong>이었습니다.<br>
+            이를 증명하기 위해 해당 Risk 구간 Lot들의 <strong>오프라인 QA 실측 평량 데이터와 타 정상 라인(7, 8호기)의 보정 트렌드를 교차 대조</strong>하여 실제 전극 로딩량은 정격 스펙 내에 있음을 입증했고, 고객사 승인을 받아 불필요한 폐기 손실을 막았습니다."
+          </div>
+        </div>
+      </div>
+
+      <!-- Q8 -->
+      <div class="qa-card open" data-cat="proc">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q08</span>
+              <span class="q-cat cat-proc">공정 데이터 개선 · 절연 코팅</span>
+              <span class="q-trigger">노트 중 "WET 절연폭과 DRY 절연폭 비교하여 WET 기반 자동보정"</span>
+            </div>
+            <div class="q-question">"Wet 절연폭과 Dry 절연폭 사이에 왜 차이가 발생하며, 왜 Dry 데이터가 아닌 Wet 데이터로 자동보정을 걸었나요?"</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 코터-오븐 구간의 피드백 지연(Dead Time) 문제와 Wet-Dry 상관관계 이해도 확인</div>
+          <div class="key-point">💡 핵심 한 줄: 건조 전후 퍼짐·수축으로 폭 차이가 발생하며, 오븐을 통과한 Dry 비전으로 보정하면 수십 미터의 피드백 딜레이(Loss)가 생기기 때문에 코터 직후 Wet 데이터로 즉시 보정합니다.</div>
+          <div class="script-box">
+            "절연액이 도포된 직후(Wet)부터 건조 오븐을 지나 고화(Dry)되기까지 미세한 유동(퍼짐)과 용매 증발 수축이 일어나기 때문에 Wet 폭과 Dry 폭 사이에 일정한 오프셋(Offset)이 발생합니다.<br>
+            만약 수십 미터 길이의 오븐을 다 빠져나온 <strong>Dry 검사기 데이터만 보고 보정을 걸면, 이미 오븐 길이만큼 불량이 만들어진 뒤에야 반영되는 응답 지연(Dead Time)</strong> 때문에 초기 조건조정 Loss가 커집니다. 그래서 Wet-Dry 간의 상관 오프셋을 정량화한 뒤, <strong>코팅 헤드 직후의 Wet 비전 데이터로 실시간 선제 보정</strong>하여 Loss를 대폭 줄였습니다."
+          </div>
+        </div>
+      </div>
+
+      <!-- Q9 -->
+      <div class="qa-card open" data-cat="proc">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q09</span>
+              <span class="q-cat cat-proc">공정 트러블슈팅 · 슬러리 온도</span>
+              <span class="q-trigger">노트 중 "슬러리 온도에 따른 로딩 변화량 분석 및 온도 테이블 구성"</span>
+            </div>
+            <div class="q-question">"정량 펌프(모노 펌프)가 일정한 RPM으로 도는데, 슬러리 온도가 바뀐다고 왜 로딩량이 흔들리나요?"</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 슬러리 온도 → 점도 → 펌프 내부 슬립(Slip) 및 배관 압력 손실로 이어지는 물리적 메커니즘 확인</div>
+          <div class="key-point">💡 핵심 한 줄: 온도가 오르면 슬러리 점도가 낮아져 모노 펌프 로터-스테이터 사이 내부 누설(Slip)과 다이 내부 압력 조건이 변하기 때문입니다.</div>
+          <div class="script-box">
+            "이론적으로는 용적식 정량 펌프의 RPM이 같으면 토출량이 같아야 하지만, 실제로는 <strong>슬러리 온도가 변하면 점도(Viscosity)가 민감하게 변합니다.</strong><br>
+            온도가 올라 점도가 낮아지면 펌프 내부 로터와 스테이터 고무 사이의 <strong>미세 간극으로 역류(Slip)하는 양과 배관 내 압력 강하가 달라져</strong> 동일한 RPM에서도 실제 다이 립에서 토출되는 질량 유량과 폭 방향 퍼짐성이 달라집니다. 그래서 온도 구간별로 펌프 RPM 보상치를 매칭한 제어 테이블을 구성해 대응했습니다."
+          </div>
+        </div>
+      </div>
+
+      <!-- Q10 -->
+      <div class="qa-card open" data-cat="proc">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q10</span>
+              <span class="q-cat cat-proc">공정 트러블슈팅 · 절연 액맺힘</span>
+              <span class="q-trigger">노트 중 "절연 한방울씩 떨어져 밸브 이원화 및 개폐 타이밍 조절"</span>
+            </div>
+            <div class="q-question">"절연 셋업 때 절연액이 한 방울씩 떨어지는 걸 '밸브 이원화와 타이밍 조절'로 잡으셨다는데, 구체적으로 어떻게 동작하게 만든 건가요?"</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 배관 잔압(Residual Pressure) 제거와 밸브 시퀀스 제어에 대한 현장 실무 디테일 확인</div>
+          <div class="key-point">💡 핵심 한 줄: 단일 밸브만 닫으면 말단 배관 잔압 때문에 액이 맺히므로, 공급 차단 밸브와 회수/석백(Suck-back) 밸브의 개폐 시차를 조절해 말단 잔압을 즉시 빼주었습니다.</div>
+          <div class="script-box">
+            "절연액은 점도가 낮아 코팅을 멈출 때 단일 밸브만 닫으면, <strong>밸브부터 미니다이 립 끝단 사이에 남아 있는 잔압과 자중 때문에</strong> 끝에 액이 한 방울씩 맺혀 떨어지는(Dropping) 현상이 생겼습니다.<br>
+            이를 해결하기 위해 메인 공급 밸브와 배관 압력을 빼주는 밸브를 이원화하여, 코팅 종료 시 <strong>공급측을 먼저 닫고 미세한 시간차(ms 단위 타이밍)를 두고 말단 잔압을 순간적으로 회수(Suck-back 효과)한 뒤 최종 차단</strong>하도록 개폐 타이밍을 튜닝해 액맺힘을 완벽히 잡았습니다."
+          </div>
+        </div>
+      </div>
+
+      <!-- Q11 -->
+      <div class="qa-card open" data-cat="proc">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q11</span>
+              <span class="q-cat cat-proc">공정 트러블슈팅 · 사선주름 제어</span>
+              <span class="q-trigger">노트 중 "코팅을 하면서 브라켓을 앞뒤로 미세 조정해 사선주름 해결"</span>
+            </div>
+            <div class="q-question">"무지부 통판 때 롤 수평과 얼라인을 다 맞춰놨는데, 왜 코팅이 들어가면 사선주름이 생기고 브라켓은 어떻게 조정하셨나요?"</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 무지부(Foil)와 유지부(Coated Web)의 물성·열수축 차이 및 R2R 웹 핸들링 실전 감각 검증</div>
+          <div class="key-point">💡 핵심 한 줄: 코팅 후에는 슬러리 하중, 좌우 두께 미세 편차, 오븐 열팽창·수축 응력이 더해져 브라켓 미세 유격이 틀어지므로, 느슨한 쪽 롤 브라켓을 진행 방향으로 미세 전진시켜 좌우 장력 밸런스를 맞췄습니다.</div>
+          <div class="script-box">
+            "무지부 Foil만 주행할 때와 달리, 실제 슬러리가 도포되고 고온 오븐을 통과하면 <strong>유지부와 무지부 간의 열수축률 차이와 좌우 로딩 미세 편차로 인해 롤에 걸리는 하중 분포가 달라집니다.</strong> 이때 체결 볼트나 브라켓의 미세한 유격이 누적되면서 작업자 측(OS)과 구동 측(DS) 간 장력 불균형이 생겨 사선주름이 발생합니다.<br>
+            따라서 짧게 실제 코팅을 진행하면서 사선주름의 결 방향을 확인해 어느 쪽 장력이 죽었는지 판독한 뒤, <strong>장력이 약한 쪽의 롤 브라켓을 미세하게 밀어 경로(Wrap angle)를 보정</strong>함으로써 좌우 장력 균형을 잡아 해결했습니다."
+          </div>
+        </div>
+      </div>
+
+      <!-- Q12 -->
+      <div class="qa-card open" data-cat="proc">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q12</span>
+              <span class="q-cat cat-proc">도전/실패 경험 · 무중단 코팅 & 저속 셋업</span>
+              <span class="q-trigger">노트 중 "속도 낮춰 코팅폭 맞춘 후 증속 / 무중단 코팅 시 단선 발생"</span>
+            </div>
+            <div class="q-question">"저속에서 코팅폭을 맞춘 뒤 정속으로 올릴 때나 무중단 코팅을 할 때, 왜 단선이 나거나 조건이 틀어지나요? 어떻게 보완할 수 있을까요?"</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 증속(Ramp-up) 과도 구간의 유량·장력·건조 동기화 메커니즘 이해도 확인</div>
+          <div class="key-point">💡 핵심 한 줄: 속도가 변하는 과도 구간에서 '펌프 유량 응답 속도'와 '구간별 관성 장력(Inertia Compensation)'이 어긋나기 때문이며, 가속 기울기(Ramp Rate) 동조화로 풀어야 합니다.</div>
+          <div class="script-box">
+            "저속에서 정속으로 증속하거나 무중단으로 조건을 바꿀 때 가장 큰 문제는 <strong>각 제어 계통의 응답 속도 차이(Time Constant 차이)</strong>입니다. 라인 속도는 서보 모터라 즉각 올라가는데, 슬러리 펌프 압력 상승이나 오븐 열풍 제어, 그리고 각 롤의 관성 보정(Inertia Compensation)이 미세하게 뒤처지면 순간적으로 <strong>오븐 내부에서 과건조 수축이나 장력 스파이크(Spike)가 걸려 단선</strong>이 발생합니다.<br>
+            현재 이를 극복하기 위해 급격한 스텝 변경 대신 <strong>가속 기울기(Ramp Rate)를 완만하게 쪼개고, 증속 구간에서 텐션 테이퍼와 펌프 선행 제어(Feed-forward) 값을 연동</strong>하는 방향으로 테스트를 보완하고 있습니다."
+          </div>
+        </div>
+      </div>
+
+      <!-- Q13 -->
+      <div class="qa-card open" data-cat="fit">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q13</span>
+              <span class="q-cat cat-fit">도메인 심층 · Safety Issue & N/P Ratio</span>
+              <span class="q-trigger">노트 중 "슬라이딩은 음극에서 발생 시 NP ratio 역전 발생함"</span>
+            </div>
+            <div class="q-question">"음극 슬라이딩과 양극 슬라이딩 중 왜 '음극 슬라이딩'이 N/P Ratio 역전과 안전성 측면에서 훨씬 더 치명적인지 설명해 주세요."</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 코터 공정 엔지니어가 셀 설계(N/P Ratio, 오버행)와 발화 메커니즘을 정확히 이해하고 있는지 검증</div>
+          <div class="key-point">💡 핵심 한 줄: N/P Ratio(음극 용량 ÷ 양극 용량)는 항상 1보다 커야 하는데, 음극 끝단이 슬라이딩으로 얇아지면 양극에서 넘어오는 리튬 이온을 받아줄 음극 집이 부족해져 리튬 금속(Dendrite)이 석출되기 때문입니다.</div>
+          <div class="script-box">
+            "배터리 안전성을 위해 음극 용량을 양극보다 5~10% 크게 설계하여 <strong>N/P Ratio를 1.05~1.10 이상으로 유지</strong>하고, 면적도 음극을 더 넓게(Overhang) 만듭니다.<br>
+            만약 양극 끝단에 슬라이딩이 생기면 양극 용량(P)이 줄어들어 N/P Ratio가 커지므로 용량만 약간 손해 볼 뿐 안전사고로 이어지진 않습니다. 반면 <strong>음극 끝단에 슬라이딩이 발생해 두께(로딩량)가 얇아지면, 마주 보는 양극 끝단 대비 음극 용량(N)이 급격히 줄어들어 국부적으로 $\text{N/P Ratio} < 1.0$ 역전</strong>이 일어납니다. 이 상태에서 충전하면 갈 곳 잃은 리튬 이온이 음극 표면에 <strong>리튬 덴드라이트(Dendrite)로 석출되어 분리막을 뚫고 내부 단락(화재)</strong>을 일으키기 때문에 음극 슬라이딩과 누적폭 관리가 생명입니다."
+          </div>
+        </div>
+      </div>
+
+      <!-- Q14 -->
+      <div class="qa-card open" data-cat="fit">
+        <div class="qa-header" onclick="toggleCard(this)">
+          <div class="qa-title-wrap">
+            <div class="qa-meta">
+              <span class="q-num">Q14</span>
+              <span class="q-cat cat-fit">지원동기 심층 · 완성차 vs 셀 제조사</span>
+              <span class="q-trigger">지원동기 중 "배터리만 만드는 회사와 완성차 회사의 엔지니어링 관점은 다르다"</span>
+            </div>
+            <div class="q-question">"완성차 회사의 배터리 엔지니어링 관점이 셀 제조사와 다르다고 하셨는데, 현대차에서 전극 코팅을 할 때는 기존 회사와 구체적으로 무엇이 달라야 하나요?"</div>
+          </div>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="intent-line">🎯 <strong>면접관 의도:</strong> 추상적인 지원동기가 아니라, 완성차(전기차 실사용 환경·급속충전·장수명·안전)와 전극 공정 파라미터를 연결할 줄 아는지 확인</div>
+          <div class="key-point">💡 핵심 한 줄: 셀 제조사가 '단기 양산 수율과 출하 스펙 통과'에 집중한다면, 완성차는 '차량 10년/数十만 km 수명과 급속충전 안전성을 좌우하는 극단 산포(Tail 분포) 억제'에 집중해야 합니다.</div>
+          <div class="script-box">
+            "셀 공급사에서는 고객사가 정해준 USL/LSL 스펙 안에만 들어오면 '양품'으로 판정해 출하 수율을 높이는 데 집중합니다.<br>
+            하지만 완성차 입장에서는 수천 개의 셀이 하나의 팩으로 묶여 차량에 탑재되기 때문에, <strong>단 하나의 전극 끝단 슬라이딩이나 미세한 바인더 마이그레이션 편차가 5년 뒤 급속충전 열화나 리콜로 직결</strong>됩니다. 즉, 단순 출하 합격률이 아니라 <strong>실제 차량의 급속충전 성능(계면 저항)과 장기 내구성에 영향을 주는 전극 산포의 꼬리(Tail)를 원천 제거하고, 셀-모듈-팩-BMS 피드백을 전극 레시피에 직접 반영하는 피드백 루프</strong>를 만드는 것이 완성차 관점의 전극 엔지니어링이라고 생각합니다."
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB 2: MASTER ORGANIZED NOTE -->
+  <div id="tab-master">
+    <div class="section-block">
+      <h2>1. PT 면접 발표 대본 핵심 구조</h2>
+      <ul>
+        <li><strong>생산운영 (18/21/46 Series)</strong>: 스트라이프 코팅·절연 코팅 운영, 현장 밀착 기구 조작(렌치)부터 조건 조정·데이터 분석·SOP 제개정·미숙련 작업자 교육까지 직접 수행.</li>
+        <li><strong>고객 기술 대응 (반제품 Biz)</strong>: 인라인 데이터 및 QA 결과 기반 출하 승인 대응, 이슈 발생 시 기술 메커니즘 규명 및 FACA/8D 리포트 기반 논리적 설득.</li>
+        <li><strong>부적합품 관리</strong>: 발생 원인 & 유출 원인 이원화 분석 → 데이터 기반 Risk Range 특정 → 단·장기 대책 수립 → 유효성 검증.</li>
+        <li><strong>4대 핵심 프로젝트</strong>: ① 웹게이지 미세라인 감지 로직(Dynamic Threshold + EMA, Loss 50%↓) / ② 슬롯다이 Shim Offset 미세조절장치 전동화(웜기어+LVDT, 셋업 Loss 18%↓, 수율 0.2%↑) / ③ 고객향 검사 데이터 헌팅 자동 제거 및 대시보드(월 40시간 절감) / ④ 슬리팅 Burr 100만 장 비전 선별 엔진(장당 5ms, 출하 지연 방어).</li>
+      </ul>
+    </div>
+
+    <div class="section-block">
+      <h2>2. 도메인 이론 & 공정 품질 핵심 요약표</h2>
+      <table class="summary-table">
+        <tr>
+          <th>바인더 마이그레이션 5단계</th>
+          <td>① 초기 Wet 균일 분포 → ② 표면 용매 우선 증발 → ③ 모세관 현상에 의한 내부 용매 상부 대류 → ④ 바인더 동반 상승 및 표면 편중 → ⑤ 고착화(하부 Foil 계면 바인더 결핍 → 접착력 저하·박리·표면 크랙 유발).<br><strong>대책:</strong> 항률 건조 구간 온도/풍속 완화(완속 건조 유도), 슬러리 고형분 상향.</td>
+        </tr>
+        <tr>
+          <th>Safety Issue 4대 리스크</th>
+          <td>• <strong>로딩(Loading)</strong>: 슬러리 온도별 제어 테이블 구성<br>• <strong>코팅폭(Width)</strong>: 스트라이프 누적폭 및 $C_{pk}$ 집중 관리<br>• <strong>Fat Edge(뚱뚱이)</strong>: 단선/캠버 유발 → 심(Shim) 끝단 모따기(Chamfer)로 토출 압력 분산<br>• <strong>Sliding(슬라이딩)</strong>: 음극 발생 시 N/P Ratio 역전 유발 → 단차심(Step Shim) 및 심 설계 변경</td>
+        </tr>
+        <tr>
+          <th>코팅 4대 불량 (로·코·주·표)</th>
+          <td>• <strong>로딩</strong>: 슬러리 온도 테이블 재구성, 매니폴드/밸브 다원화<br>• <strong>코팅폭</strong>: 심 치수/모따기/단차심 반영, 누적폭 관리<br>• <strong>주름</strong>: 무지부 얼라인만으로는 부족(코팅 시 브라켓/볼트 미세 유격 누적) → 실제 짧게 코팅하며 브라켓 앞뒤 미세 조정으로 장력 불균형 해소<br>• <strong>표면</strong>: 필터 2단(Dual) 구성, 필터 입자 사이즈 변경, 코터 헤드 에어커튼 설치</td>
+        </tr>
+        <tr>
+          <th>공정 데이터 활용 개선 4선</th>
+          <td>1) Wet-Dry 절연폭 비교를 통한 Wet 데이터 기반 자동보정 (조건조정 Loss 절감)<br>2) 미니다이 Gap 이동 거리에 따른 절연폭 변화량 정량화 및 모델별 레시피 관리<br>3) 심 오프셋 $1\,\mu\text{m}$ 조정당 코팅폭 변화량 정량화<br>4) 슬러리 온도 및 펌프 RPM에 따른 로딩 변화량 상관 분석</td>
+        </tr>
+        <tr>
+          <th>현업 난제 & 도전/실패 경험</th>
+          <td>• <strong>해결한 난제</strong>: 슬러리 온도 룸 추종성(부스 내 환경 연동 테스트), 절연액 맺힘(밸브 이원화 및 개폐 타이밍 제어), 사선주름(현장 브라켓 미세 조정)<br>• <strong>아쉬웠던 점/도전 중</strong>: 코팅 Gap 완전 자동보정(과접근 시 단선 리스크), 절연 기구부 공압 적용(모터 미적용으로 인한 편의성 한계), 무중단 코팅 테스트(과도 구간 단선 보완 중)</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+  function toggleCard(headerEl) {
+    headerEl.parentElement.classList.toggle('open');
+  }
+
+  function toggleAll(openState) {
+    document.querySelectorAll('.qa-card').forEach(card => {
+      if (openState) card.classList.add('open');
+      else card.classList.remove('open');
+    });
+  }
+
+  function filterCards(cat, btnEl) {
+    document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+    document.querySelectorAll('.qa-card').forEach(card => {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  function searchCards() {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    document.querySelectorAll('.qa-card').forEach(card => {
+      const text = card.innerText.toLowerCase();
+      card.style.display = text.includes(q) ? 'block' : 'none';
+    });
+  }
+
+  function switchTab(tab, btnEl) {
+    document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+    const isFollowup = tab === 'followup';
+    document.getElementById('tab-followup').style.display = isFollowup ? 'block' : 'none';
+    document.getElementById('followup-controls').style.display = isFollowup ? 'flex' : 'none';
+    document.getElementById('tab-master').style.display = isFollowup ? 'none' : 'block';
+  }
+</script>
+
+</body>
+</html>
