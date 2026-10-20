@@ -869,6 +869,126 @@
       color: var(--accent-amber);
     }
 
+    .q-item-rec {
+      font-size: 0.72rem;
+      background: rgba(16, 185, 129, 0.18);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    textarea.stt-textarea {
+      width: 100%;
+      min-height: 76px;
+      background: #090d16;
+      border: 1px solid #263859;
+      border-radius: 8px;
+      color: #f1f5f9;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      padding: 10px 12px;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea.stt-textarea:focus {
+      border-color: var(--accent-blue);
+    }
+
+    /* Cumulative Recording & Text History Section */
+    .history-zone {
+      margin-top: 24px;
+      background: #0b1120;
+      border: 1.5px solid #1e293b;
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .history-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .history-card {
+      background: #111827;
+      border: 1px solid #263859;
+      border-radius: 12px;
+      padding: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .history-card:hover {
+      border-color: #38bdf8;
+    }
+
+    .history-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .history-q-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      line-height: 1.45;
+    }
+
+    .history-q-title:hover {
+      color: var(--accent-blue);
+      text-decoration: underline;
+    }
+
+    .history-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .history-stt-box {
+      margin-top: 10px;
+      background: #090d16;
+      border: 1px solid #1e293b;
+      border-left: 3px solid var(--accent-emerald);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
     /* Shortcut Guide Footer */
     .shortcut-bar {
       margin-top: 16px;
@@ -1111,10 +1231,10 @@
       <!-- Live Speech-to-Text Transcript -->
       <div class="stt-box">
         <div class="stt-label">
-          <span>📝 실시간 음성 인식 텍스트 변환 (Chrome/Edge 자동 받아쓰기)</span>
+          <span>📝 실시간 음성 인식 텍스트 & 내 답변 메모 (자동 저장됨 · 직접 수정 가능)</span>
           <span id="sttState">대기</span>
         </div>
-        <div class="stt-content" id="sttTranscript">녹음을 시작하면 내가 말한 답변이 이곳에 텍스트로 기록됩니다.</div>
+        <textarea class="stt-textarea" id="sttTranscript" placeholder="녹음을 시작하면 내가 말한 답변이 이곳에 자동으로 받아적히며, 다음 문항으로 넘어가도 사라지지 않고 문항별로 자동 저장됩니다. 직접 타이핑하여 메모하셔도 됩니다." oninput="onTranscriptManualInput()"></textarea>
       </div>
     </div>
 
@@ -1133,6 +1253,22 @@
       <div class="answer-body">
         <div class="keywords-row" id="answerKeywords"></div>
         <div class="answer-script" id="answerScript"></div>
+      </div>
+    </div>
+
+    <!-- Cumulative Session Recording & Text History Board -->
+    <div class="history-zone" id="historyZone">
+      <div class="history-header">
+        <div class="history-title">
+          <span>🗂️ 내가 답변한 녹음 & 텍스트 누적 기록 (<span id="savedRecordCount">0</span>건)</span>
+          <span style="font-size:0.78rem; font-weight:500; color:var(--text-muted);">— 다음 문항으로 넘어가도 내 녹음과 텍스트가 여기에 계속 남습니다</span>
+        </div>
+        <button class="btn-icon" onclick="clearAllRecordings()" style="font-size:0.76rem; padding:5px 10px;">🗑️ 전체 녹음·텍스트 기록 비우기</button>
+      </div>
+      <div class="history-list" id="historyListContainer">
+        <div style="font-size:0.85rem; color:var(--text-muted); text-align:center; padding:18px 0;">
+          아직 저장된 답변 녹음이나 텍스트가 없습니다. 위에서 답변을 녹음하거나 텍스트를 입력하면 문항별로 자동 보존됩니다.
+        </div>
       </div>
     </div>
 
@@ -1499,11 +1635,14 @@
   ];
 
   // =========================================================================
-  // 2. 상태 관리 (LocalStorage 연동)
+  // 2. 상태 관리 & 문항별 녹음/텍스트 영구 보존 (IndexedDB + LocalStorage)
   // =========================================================================
   const STORAGE_KEY_QUESTIONS = 'voice_mock_questions_v1';
   const STORAGE_KEY_STARRED = 'voice_mock_starred_v1';
   const STORAGE_KEY_DONE = 'voice_mock_done_v1';
+  const STORAGE_KEY_TEXT_MAP = 'voice_mock_transcripts_v1';
+  const IDB_NAME = 'VoiceMockInterviewDB_v1';
+  const IDB_STORE = 'recordings';
 
   let questions = [];
   let starredIds = new Set();
@@ -1513,26 +1652,311 @@
   let historyStack = [];
   let historyPointer = -1;
 
+  // 문항별 녹음 & 텍스트 저장소: qId -> { qId, audioBlob, audioUrl, transcript, duration, updatedAt }
+  const savedRecordsMap = new Map();
+
   // Audio Recording & Web Speech API variables
   let mediaRecorder = null;
   let audioChunks = [];
-  let recordedAudioUrl = null;
   let isRecording = false;
+  let recordingQuestionId = null;
   let recStartTime = 0;
   let recTimerInterval = null;
+  let lastRecDurationStr = '00:00';
   let audioCtx = null;
   let analyser = null;
   let micStream = null;
   let animFrameId = null;
   let recognition = null;
   let sttText = '';
+  let sttInterim = '';
+
+  function openIDB() {
+    return new Promise((resolve, reject) => {
+      if (!('indexedDB' in window)) return resolve(null);
+      const req = indexedDB.open(IDB_NAME, 1);
+      req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(IDB_STORE)) {
+          db.createObjectStore(IDB_STORE, { keyPath: 'qId' });
+        }
+      };
+      req.onsuccess = e => resolve(e.target.result);
+      req.onerror = () => resolve(null);
+    });
+  }
+
+  async function loadSavedRecordingsFromDB() {
+    // 1) LocalStorage에서 텍스트 백업 먼저 로드
+    try {
+      const rawTextMap = localStorage.getItem(STORAGE_KEY_TEXT_MAP);
+      if (rawTextMap) {
+        const obj = JSON.parse(rawTextMap);
+        Object.keys(obj).forEach(k => {
+          const qId = Number(k);
+          savedRecordsMap.set(qId, {
+            qId,
+            audioBlob: null,
+            audioUrl: null,
+            transcript: obj[k].transcript || '',
+            duration: obj[k].duration || '00:00',
+            updatedAt: obj[k].updatedAt || Date.now()
+          });
+        });
+      }
+    } catch (e) {}
+
+    // 2) IndexedDB에서 오디오 Blob + 텍스트 로드
+    const db = await openIDB();
+    if (!db) {
+      renderHistoryBoard();
+      renderQuestionList();
+      return;
+    }
+    return new Promise(resolve => {
+      try {
+        const tx = db.transaction(IDB_STORE, 'readonly');
+        const store = tx.objectStore(IDB_STORE);
+        const req = store.getAll();
+        req.onsuccess = () => {
+          const rows = req.result || [];
+          rows.forEach(r => {
+            const url = r.audioBlob ? URL.createObjectURL(r.audioBlob) : null;
+            savedRecordsMap.set(r.qId, {
+              qId: r.qId,
+              audioBlob: r.audioBlob || null,
+              audioUrl: url,
+              transcript: r.transcript || (savedRecordsMap.get(r.qId)?.transcript || ''),
+              duration: r.duration || '00:00',
+              updatedAt: r.updatedAt || Date.now()
+            });
+          });
+          // 현재 선택된 문항에 저장된 기록이 있으면 UI에 즉시 반영
+          const curQ = questions[currentIndex];
+          if (curQ) restoreQuestionRecordUI(curQ.id);
+          renderHistoryBoard();
+          renderQuestionList();
+          resolve();
+        };
+        req.onerror = () => resolve();
+      } catch (e) {
+        resolve();
+      }
+    });
+  }
+
+  function saveTranscriptMapToLocalStorage() {
+    try {
+      const obj = {};
+      savedRecordsMap.forEach((val, key) => {
+        if ((val.transcript && val.transcript.trim()) || val.audioUrl) {
+          obj[key] = {
+            transcript: val.transcript || '',
+            duration: val.duration || '00:00',
+            updatedAt: val.updatedAt || Date.now()
+          };
+        }
+      });
+      localStorage.setItem(STORAGE_KEY_TEXT_MAP, JSON.stringify(obj));
+    } catch (e) {}
+  }
+
+  async function saveRecordForQuestion(qId, { audioBlob, transcript, duration }) {
+    if (!qId) return;
+    const prev = savedRecordsMap.get(qId) || {
+      qId,
+      audioBlob: null,
+      audioUrl: null,
+      transcript: '',
+      duration: '00:00',
+      updatedAt: Date.now()
+    };
+
+    let newBlob = prev.audioBlob;
+    let newUrl = prev.audioUrl;
+    if (audioBlob) {
+      if (prev.audioUrl) URL.revokeObjectURL(prev.audioUrl);
+      newBlob = audioBlob;
+      newUrl = URL.createObjectURL(audioBlob);
+    }
+
+    const updated = {
+      qId,
+      audioBlob: newBlob,
+      audioUrl: newUrl,
+      transcript: transcript !== undefined ? transcript : prev.transcript,
+      duration: duration || prev.duration || '00:00',
+      updatedAt: Date.now()
+    };
+
+    savedRecordsMap.set(qId, updated);
+    saveTranscriptMapToLocalStorage();
+
+    const db = await openIDB();
+    if (db) {
+      try {
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        tx.objectStore(IDB_STORE).put({
+          qId: updated.qId,
+          audioBlob: updated.audioBlob,
+          transcript: updated.transcript,
+          duration: updated.duration,
+          updatedAt: updated.updatedAt
+        });
+      } catch (e) {}
+    }
+
+    renderHistoryBoard();
+    renderQuestionList();
+  }
+
+  async function deleteRecordForQuestion(qId) {
+    const rec = savedRecordsMap.get(qId);
+    if (rec && rec.audioUrl) URL.revokeObjectURL(rec.audioUrl);
+    savedRecordsMap.delete(qId);
+    saveTranscriptMapToLocalStorage();
+
+    const db = await openIDB();
+    if (db) {
+      try {
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        tx.objectStore(IDB_STORE).delete(qId);
+      } catch (e) {}
+    }
+
+    const curQ = questions[currentIndex];
+    if (curQ && curQ.id === qId) {
+      restoreQuestionRecordUI(qId);
+    }
+    renderHistoryBoard();
+    renderQuestionList();
+  }
+
+  async function clearAllRecordings() {
+    if (!confirm('저장된 모든 문항의 녹음 오디오와 텍스트 기록을 초기화하시겠습니까?')) return;
+    savedRecordsMap.forEach(rec => {
+      if (rec.audioUrl) URL.revokeObjectURL(rec.audioUrl);
+    });
+    savedRecordsMap.clear();
+    localStorage.removeItem(STORAGE_KEY_TEXT_MAP);
+
+    const db = await openIDB();
+    if (db) {
+      try {
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        tx.objectStore(IDB_STORE).clear();
+      } catch (e) {}
+    }
+
+    const curQ = questions[currentIndex];
+    if (curQ) restoreQuestionRecordUI(curQ.id);
+    renderHistoryBoard();
+    renderQuestionList();
+  }
+
+  function onTranscriptManualInput() {
+    const curQ = questions[currentIndex];
+    if (!curQ) return;
+    const val = document.getElementById('sttTranscript').value;
+    sttText = val;
+    saveRecordForQuestion(curQ.id, { transcript: val });
+  }
+
+  function restoreQuestionRecordUI(qId) {
+    const rec = savedRecordsMap.get(qId);
+    const audioEl = document.getElementById('recordedAudio');
+    const dlLink = document.getElementById('downloadAudioLink');
+    const pbBox = document.getElementById('playbackBox');
+    const replayBtn = document.getElementById('btnReplayMyVoice');
+    const sttEl = document.getElementById('sttTranscript');
+    const timerEl = document.getElementById('recTimer');
+    const statusEl = document.getElementById('recStatusText');
+
+    if (rec && rec.audioUrl) {
+      audioEl.src = rec.audioUrl;
+      audioEl.playbackRate = parseFloat(document.getElementById('playbackSpeed').value || '1.0');
+      dlLink.href = rec.audioUrl;
+      dlLink.download = `Q${String(qId).padStart(2, '0')}_내답변녹음.webm`;
+      pbBox.classList.add('ready');
+      replayBtn.style.display = 'inline-flex';
+      timerEl.textContent = rec.duration || '00:00';
+      statusEl.textContent = '✅ 이 문항에 저장된 내 답변 녹음이 있습니다 — 바로 재생하거나 새로 녹음할 수 있습니다';
+    } else {
+      audioEl.removeAttribute('src');
+      pbBox.classList.remove('ready');
+      replayBtn.style.display = 'none';
+      timerEl.textContent = '00:00';
+      statusEl.textContent = '대기 중 — 아래 \'답변 녹음 시작\' 버튼을 누르고 말씀하세요';
+    }
+
+    sttEl.value = (rec && rec.transcript) ? rec.transcript : '';
+  }
+
+  function renderHistoryBoard() {
+    const container = document.getElementById('historyListContainer');
+    const countEl = document.getElementById('savedRecordCount');
+    if (!container) return;
+
+    const entries = [...savedRecordsMap.values()]
+      .filter(r => r.audioUrl || (r.transcript && r.transcript.trim().length > 0))
+      .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+
+    countEl.textContent = entries.length;
+
+    if (entries.length === 0) {
+      container.innerHTML = `
+        <div style="font-size:0.85rem; color:var(--text-muted); text-align:center; padding:18px 0;">
+          아직 저장된 답변 녹음이나 텍스트가 없습니다. 위에서 답변을 녹음하거나 텍스트를 입력하면 다음 문항으로 넘어가도 이곳에 계속 유지됩니다.
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = '';
+    entries.forEach(item => {
+      const q = questions.find(x => x.id === item.qId);
+      if (!q) return;
+      const timeStr = new Date(item.updatedAt).toLocaleTimeString('ko-KR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+
+      const card = document.createElement('div');
+      card.className = 'history-card';
+      card.innerHTML = `
+        <div class="history-card-top">
+          <div class="history-q-title" onclick="jumpToQuestionById(${q.id})" title="클릭하면 이 문항으로 이동합니다">
+            <span class="q-number" style="margin-right:6px;">Q${String(q.id).padStart(2, '0')}</span>
+            <span>${q.question}</span>
+          </div>
+          <div class="history-meta">
+            <span>⏱️ ${item.duration || '00:00'}</span>
+            <span>🕒 ${timeStr}</span>
+            ${item.audioUrl ? `<a href="${item.audioUrl}" download="Q${String(q.id).padStart(2, '0')}_내답변녹음.webm" class="btn-icon" style="padding:3px 8px; font-size:0.74rem; text-decoration:none;">💾 저장</a>` : ''}
+            <button class="btn-icon" onclick="deleteRecordForQuestion(${q.id})" style="padding:3px 8px; font-size:0.74rem; color:#fda4af;">🗑️ 삭제</button>
+          </div>
+        </div>
+        ${item.audioUrl ? `<audio controls src="${item.audioUrl}" style="width:100%; height:38px; margin-top:4px;"></audio>` : ''}
+        <div class="history-stt-box">${(item.transcript && item.transcript.trim()) ? item.transcript : '(변환된 텍스트가 없습니다 — 위 입력창에서 메모를 남길 수 있습니다)'}</div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function jumpToQuestionById(qId) {
+    const idx = questions.findIndex(q => q.id === qId);
+    if (idx !== -1) {
+      selectQuestionByIndex(idx, false, true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
 
   function loadState() {
     try {
       const savedQ = localStorage.getItem(STORAGE_KEY_QUESTIONS);
       if (savedQ) {
         const parsed = JSON.parse(savedQ);
-        // 기본 37개가 모두 포함되도록 병합
         if (Array.isArray(parsed) && parsed.length >= DEFAULT_QUESTIONS.length) {
           questions = parsed;
         } else {
@@ -1581,6 +2005,7 @@
 
   function pickRandomQuestion(autoSpeakNow = true) {
     stopSpeaking();
+    // 녹음 중 다음 문제로 넘어가더라도 이전 문항의 녹음과 텍스트가 날아가지 않고 정상 저장되도록 처리
     if (isRecording) stopRecording(false);
 
     const pool = getFilteredQuestions();
@@ -1590,15 +2015,12 @@
       return;
     }
 
-    // 아직 안 푼 문제(doneIds에 없는 문제) 우선 추출
     let unvisited = pool.filter(q => !doneIds.has(q.id));
     if (unvisited.length === 0) {
-      // 한 바퀴 다 돌았으면 현재 풀의 done 기록 초기화 후 다시 랜덤
       pool.forEach(q => doneIds.delete(q.id));
       unvisited = [...pool];
     }
 
-    // 현재 보고 있는 문제와 다른 문제 우선 선택
     const currentQ = questions[currentIndex];
     let candidates = unvisited.filter(q => !currentQ || q.id !== currentQ.id);
     if (candidates.length === 0) candidates = unvisited;
@@ -1632,6 +2054,8 @@
 
   function selectQuestionByIndex(idx, shouldSpeak = true, pushHistory = true) {
     if (idx < 0 || idx >= questions.length) return;
+    if (isRecording) stopRecording(false);
+
     currentIndex = idx;
     const q = questions[currentIndex];
     doneIds.add(q.id);
@@ -1673,11 +2097,8 @@
     });
     document.getElementById('answerScript').textContent = q.answer;
 
-    // 이전 녹음 플레이어 숨김 초기화
-    document.getElementById('playbackBox').classList.remove('ready');
-    document.getElementById('btnReplayMyVoice').style.display = 'none';
-    document.getElementById('sttTranscript').textContent = '녹음을 시작하면 내가 말한 답변이 이곳에 텍스트로 기록됩니다.';
-    document.getElementById('recTimer').textContent = '00:00';
+    // 해당 문항에 이미 저장된 녹음 & 텍스트가 있으면 그대로 복원!
+    restoreQuestionRecordUI(q.id);
 
     updateDeckProgress();
     renderQuestionList();
@@ -1778,7 +2199,6 @@
     };
     utter.onend = () => {
       zone.classList.remove('speaking');
-      // 질문 낭독 완료 후 자동 녹음 시작 옵션이 켜져 있으면 바로 녹음 시작
       if (isQuestion && document.getElementById('optAutoRecord').checked && !isRecording) {
         startRecording();
       }
@@ -1802,7 +2222,7 @@
   }
 
   // =========================================================================
-  // 5. 내 답변 음성 녹음 (MediaRecorder + 실시간 파형 + STT 받아쓰기)
+  // 5. 내 답변 음성 녹음 (MediaRecorder + 실시간 파형 + STT 받아쓰기 + 영구 저장)
   // =========================================================================
   function toggleRecording() {
     if (isRecording) {
@@ -1821,37 +2241,15 @@
       return;
     }
 
+    const curQ = questions[currentIndex];
+    recordingQuestionId = curQ ? curQ.id : null;
     audioChunks = [];
+    lastRecDurationStr = '00:00';
     mediaRecorder = new MediaRecorder(micStream);
 
     mediaRecorder.ondataavailable = event => {
       if (event.data && event.data.size > 0) {
         audioChunks.push(event.data);
-      }
-    };
-
-    mediaRecorder.onstop = () => {
-      const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
-      if (recordedAudioUrl) URL.revokeObjectURL(recordedAudioUrl);
-      recordedAudioUrl = URL.createObjectURL(audioBlob);
-
-      const audioEl = document.getElementById('recordedAudio');
-      audioEl.src = recordedAudioUrl;
-      audioEl.playbackRate = parseFloat(document.getElementById('playbackSpeed').value || '1.0');
-
-      const dlLink = document.getElementById('downloadAudioLink');
-      const q = questions[currentIndex];
-      dlLink.href = recordedAudioUrl;
-      dlLink.download = `Q${String(q.id).padStart(2, '0')}_내답변녹음.webm`;
-
-      document.getElementById('playbackBox').classList.add('ready');
-      document.getElementById('btnReplayMyVoice').style.display = 'inline-flex';
-
-      if (document.getElementById('optAutoPlayAnswer').checked) {
-        // 모범답안 자동 펼치기 및 내 녹음 재생
-        document.getElementById('answerZone').classList.add('open');
-        document.getElementById('answerToggleArrow').textContent = '▲ 접기';
-        audioEl.play().catch(() => {});
       }
     };
 
@@ -1873,14 +2271,15 @@
       const elapsed = Math.floor((Date.now() - recStartTime) / 1000);
       const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
       const secs = String(elapsed % 60).padStart(2, '0');
-      document.getElementById('recTimer').textContent = `${mins}:${secs}`;
+      lastRecDurationStr = `${mins}:${secs}`;
+      document.getElementById('recTimer').textContent = lastRecDurationStr;
     }, 250);
 
     // 오디오 파형 비주얼라이저 시작
     startVisualizer(micStream);
 
-    // 음성 인식(STT) 시작
-    startSTT();
+    // 음성 인식(STT) 시작 (기존 메모가 있으면 이어서 작성 가능하도록 유지)
+    startSTT(recordingQuestionId);
   }
 
   function stopRecording(triggerPlayback = true) {
@@ -1888,13 +2287,39 @@
     isRecording = false;
     clearInterval(recTimerInterval);
 
-    if (!triggerPlayback && mediaRecorder) {
-      mediaRecorder.onstop = null;
+    const targetQId = recordingQuestionId || (questions[currentIndex] ? questions[currentIndex].id : null);
+    const finalDuration = lastRecDurationStr || document.getElementById('recTimer').textContent || '00:00';
+    const capturedTranscript = (document.getElementById('sttTranscript').value || sttText || '').trim();
+
+    if (mediaRecorder) {
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+
+        // 문항별 저장소 & IndexedDB에 영구 저장
+        await saveRecordForQuestion(targetQId, {
+          audioBlob,
+          transcript: capturedTranscript,
+          duration: finalDuration
+        });
+
+        // 만약 현재 화면에 보고 있는 문항이 방금 녹음한 문항과 같다면 플레이어 UI 갱신 및 자동 재생
+        const currentQ = questions[currentIndex];
+        if (currentQ && currentQ.id === targetQId) {
+          restoreQuestionRecordUI(targetQId);
+          if (triggerPlayback && document.getElementById('optAutoPlayAnswer').checked) {
+            document.getElementById('answerZone').classList.add('open');
+            document.getElementById('answerToggleArrow').textContent = '▲ 접기';
+            const audioEl = document.getElementById('recordedAudio');
+            audioEl.play().catch(() => {});
+          }
+        }
+      };
+
+      if (mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
     }
 
-    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-      mediaRecorder.stop();
-    }
     if (micStream) {
       micStream.getTracks().forEach(track => track.stop());
     }
@@ -1905,7 +2330,7 @@
     const btn = document.getElementById('btnRecordToggle');
     btn.classList.remove('is-recording');
     btn.innerHTML = '🎙️ 다시 녹음하기 (Space)';
-    document.getElementById('recStatusText').textContent = '녹음 완료 — 아래 플레이어에서 내 답변을 들어보세요';
+    document.getElementById('recStatusText').textContent = '녹음 완료 — 아래 플레이어 및 누적 기록장에 자동 저장되었습니다';
     document.getElementById('visPlaceholder').style.display = 'block';
   }
 
@@ -1967,10 +2392,10 @@
   }
 
   // Web Speech API (STT 실시간 받아쓰기)
-  function startSTT() {
+  function startSTT(targetQId) {
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRec) {
-      document.getElementById('sttState').textContent = '브라우저 미지원 (음성 녹음은 정상 작동)';
+      document.getElementById('sttState').textContent = '브라우저 음성인식 미지원 (오디오 녹음 및 직접 메모는 정상 작동)';
       return;
     }
     try {
@@ -1979,7 +2404,8 @@
       recognition.continuous = true;
       recognition.interimResults = true;
       sttText = '';
-      document.getElementById('sttTranscript').textContent = '';
+      sttInterim = '';
+      document.getElementById('sttTranscript').value = '';
       document.getElementById('sttState').textContent = '🟢 음성 인식 중...';
 
       recognition.onresult = event => {
@@ -1992,7 +2418,15 @@
             interim += transcript;
           }
         }
-        document.getElementById('sttTranscript').textContent = (sttText + interim).trim() || '말씀하시면 텍스트로 변환됩니다...';
+        sttInterim = interim;
+        const fullText = (sttText + sttInterim).trim();
+        const curQ = questions[currentIndex];
+        if (curQ && curQ.id === targetQId) {
+          document.getElementById('sttTranscript').value = fullText;
+        }
+        if (targetQId && fullText) {
+          saveRecordForQuestion(targetQId, { transcript: fullText });
+        }
       };
 
       recognition.onerror = () => {};
@@ -2000,7 +2434,7 @@
         if (isRecording) {
           try { recognition.start(); } catch (e) {}
         } else {
-          document.getElementById('sttState').textContent = '완료';
+          document.getElementById('sttState').textContent = '자동 저장됨';
         }
       };
       recognition.start();
@@ -2011,7 +2445,7 @@
     if (recognition) {
       try { recognition.stop(); } catch (e) {}
     }
-    document.getElementById('sttState').textContent = '대기';
+    document.getElementById('sttState').textContent = '자동 저장됨';
   }
 
   // =========================================================================
@@ -2047,10 +2481,16 @@
         selectQuestionByIndex(idx, true, true);
       };
 
+      const rec = savedRecordsMap.get(q.id);
+      const hasRec = rec && (rec.audioUrl || (rec.transcript && rec.transcript.trim()));
+
       div.innerHTML = `
         <span class="q-item-num">Q${String(q.id).padStart(2, '0')}</span>
         <div class="q-item-text">
-          <div style="font-size:0.73rem; color:#38bdf8; margin-bottom:2px;">${q.topic}</div>
+          <div style="font-size:0.73rem; color:#38bdf8; margin-bottom:2px; display:flex; align-items:center; gap:6px;">
+            <span>${q.topic}</span>
+            ${hasRec ? '<span class="q-item-rec">🎙️ 녹음됨</span>' : ''}
+          </div>
           <div>${q.question}</div>
         </div>
         ${starredIds.has(q.id) ? '<span class="q-item-star">★</span>' : ''}
@@ -2146,8 +2586,9 @@
   });
 
   // 초기화 실행
-  window.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('DOMContentLoaded', async () => {
     loadState();
+    await loadSavedRecordingsFromDB();
     pickRandomQuestion(false);
   });
 </script>
