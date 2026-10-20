@@ -1125,7 +1125,7 @@
         <span>🔊 문제 출제 시 자동 음성 낭독</span>
       </label>
       <label class="option-item" title="면접관이 질문을 다 읽고 나면 자동으로 마이크 녹음을 시작합니다.">
-        <input type="checkbox" id="optAutoRecord">
+        <input type="checkbox" id="optAutoRecord" checked>
         <span>🎙️ 질문 낭독 직후 자동 녹음 시작</span>
       </label>
       <label class="option-item" title="녹음을 멈추면 내 답변 음성을 즉시 재생하고 모범답안을 펼칩니다.">
@@ -2166,9 +2166,47 @@
     );
   }
 
+  let ttsCancelledManually = false;
+  let ttsWatchdogTimer = null;
+
+  async function ensureMicStream() {
+    if (micStream && micStream.active) {
+      const tracks = micStream.getAudioTracks();
+      if (tracks.length > 0 && tracks[0].readyState === 'live') {
+        return micStream;
+      }
+    }
+    try {
+      micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      return micStream;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function playStartBeep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.14);
+      setTimeout(() => ctx.close().catch(() => {}), 250);
+    } catch (e) {}
+  }
+
   function speakCurrentQuestion() {
     const q = questions[currentIndex];
     if (!q) return;
+    if (document.getElementById('optAutoRecord').checked) {
+      ensureMicStream();
+    }
     speakText(q.question, true);
   }
 
@@ -2182,35 +2220,76 @@
   function speakText(text, isQuestion = true) {
     if (!('speechSynthesis' in window)) {
       alert('이 브라우저는 음성 읽어주기(TTS)를 지원하지 않습니다.');
-      return;
-    }
-    window.speechSynthesis.cancel();
-
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'ko-KR';
-    const voice = getKoreanVoice();
-    if (voice) utter.voice = voice;
-    utter.rate = parseFloat(document.getElementById('ttsRate').value || '1.0');
-    utter.pitch = 1.0;
-
-    const zone = document.getElementById('interviewerZone');
-    utter.onstart = () => {
-      zone.classList.add('speaking');
-    };
-    utter.onend = () => {
-      zone.classList.remove('speaking');
       if (isQuestion && document.getElementById('optAutoRecord').checked && !isRecording) {
         startRecording();
       }
-    };
-    utter.onerror = () => {
-      zone.classList.remove('speaking');
-    };
+      return;
+    }
 
-    window.speechSynthesis.speak(utter);
+    ttsCancelledManually = true;
+    clearInterval(ttsWatchdogTimer);
+    window.speechSynthesis.cancel();
+
+    setTimeout(() => {
+      ttsCancelledManually = false;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'ko-KR';
+      const voice = getKoreanVoice();
+      if (voice) utter.voice = voice;
+      utter.rate = parseFloat(document.getElementById('ttsRate').value || '1.0');
+      utter.pitch = 1.0;
+
+      const zone = document.getElementById('interviewerZone');
+      let hasTriggeredAutoRec = false;
+
+      const triggerAutoRecIfNeeded = () => {
+        if (hasTriggeredAutoRec) return;
+        hasTriggeredAutoRec = true;
+        clearInterval(ttsWatchdogTimer);
+        zone.classList.remove('speaking');
+        if (!ttsCancelledManually && isQuestion && document.getElementById('optAutoRecord').checked && !isRecording) {
+          playStartBeep();
+          startRecording();
+        }
+      };
+
+      utter.onstart = () => {
+        zone.classList.add('speaking');
+        if (isQuestion && document.getElementById('optAutoRecord').checked) {
+          document.getElementById('recStatusText').textContent = '🗣️ 면접관이 질문을 읽는 중입니다... (낭독 직후 자동으로 녹음이 시작됩니다)';
+        }
+      };
+
+      utter.onend = () => {
+        triggerAutoRecIfNeeded();
+      };
+
+      utter.onerror = () => {
+        clearInterval(ttsWatchdogTimer);
+        zone.classList.remove('speaking');
+      };
+
+      window.speechSynthesis.speak(utter);
+
+      // Chromium 계열 간헐적 onend 누락 대비 워치독 타이머
+      let startedSpeaking = false;
+      ttsWatchdogTimer = setInterval(() => {
+        if (ttsCancelledManually) {
+          clearInterval(ttsWatchdogTimer);
+          return;
+        }
+        if (window.speechSynthesis.speaking) {
+          startedSpeaking = true;
+        } else if (startedSpeaking && !window.speechSynthesis.pending) {
+          triggerAutoRecIfNeeded();
+        }
+      }, 150);
+    }, 60);
   }
 
   function stopSpeaking() {
+    ttsCancelledManually = true;
+    clearInterval(ttsWatchdogTimer);
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
@@ -2233,10 +2312,11 @@
   }
 
   async function startRecording() {
+    if (isRecording) return;
     stopSpeaking();
-    try {
-      micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch (err) {
+
+    const stream = await ensureMicStream();
+    if (!stream) {
       alert('마이크 권한을 허용해 주세요! 브라우저 주소창 왼쪽의 자물쇠/마이크 아이콘에서 허용할 수 있습니다.');
       return;
     }
@@ -2245,7 +2325,7 @@
     recordingQuestionId = curQ ? curQ.id : null;
     audioChunks = [];
     lastRecDurationStr = '00:00';
-    mediaRecorder = new MediaRecorder(micStream);
+    mediaRecorder = new MediaRecorder(stream);
 
     mediaRecorder.ondataavailable = event => {
       if (event.data && event.data.size > 0) {
@@ -2261,7 +2341,7 @@
     const btn = document.getElementById('btnRecordToggle');
     btn.classList.add('is-recording');
     btn.innerHTML = '⏹️ 답변 완료 및 녹음 종료 (Space)';
-    document.getElementById('recStatusText').textContent = '🔴 녹음 중... 면접관에게 말씀하듯 답변해 주세요';
+    document.getElementById('recStatusText').textContent = '🔴 녹음 중... 지금 바로 답변을 말씀해 주세요!';
     document.getElementById('visPlaceholder').style.display = 'none';
 
     // 타이머 시작
@@ -2276,9 +2356,9 @@
     }, 250);
 
     // 오디오 파형 비주얼라이저 시작
-    startVisualizer(micStream);
+    startVisualizer(stream);
 
-    // 음성 인식(STT) 시작 (기존 메모가 있으면 이어서 작성 가능하도록 유지)
+    // 음성 인식(STT) 시작
     startSTT(recordingQuestionId);
   }
 
@@ -2320,9 +2400,6 @@
       }
     }
 
-    if (micStream) {
-      micStream.getTracks().forEach(track => track.stop());
-    }
     stopVisualizer();
     stopSTT();
 
